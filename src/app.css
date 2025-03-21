@@ -1,8 +1,13 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
-@theme {
+@theme inline {
 	--aspect-card: 54/85;
+
+	--color-primary-background: var(--color-blue-200);
+	--color-primary-foreground: var(--color-blue-500);
+	--color-secondary-background: var(--color-orange-200);
+	--color-secondary-foreground: var(--color-orange-500);
 }
 
 @layer base {

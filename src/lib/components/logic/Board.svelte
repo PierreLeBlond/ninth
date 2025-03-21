@@ -15,8 +15,6 @@
 	let canPick = $derived(gameState.pickedCard === null);
 	let canPut = $derived(gameState.pickedCard !== null && handCardIndex !== null);
 
-	$inspect({ canPick, canPut });
-
 	const handleChooseCard = (index: number) => {
 		if (canPick) {
 			const newGameState = pickCard($state.snapshot(gameState), index);
@@ -34,5 +32,10 @@
 {#each gameState.board as card, index (index)}
 	{@const pickable = card !== null && canPick}
 	{@const putable = card === null && canPut}
-	<Card cardName={card} onChoose={() => handleChooseCard(index)} disabled={!pickable && !putable} />
+	<Card
+		cardName={card}
+		onChoose={() => handleChooseCard(index)}
+		disabled={!pickable && !putable}
+		variant={gameState.currentPlayer === 0 ? 'primary' : 'secondary'}
+	/>
 {/each}
