@@ -1,13 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { endTurn } from '$lib/player/endTurn';
 import { prepare } from '$lib/game/prepare';
+import { expectValidGameState } from '../testHelpers';
 
 describe('endTurn', () => {
+	it('should end turn', () => {
+		const gameState = prepare();
+		const nextGameState = endTurn(gameState);
+		expectValidGameState(nextGameState);
+	});
+
 	it('should put picked card on hand', () => {
 		const gameState = prepare();
 		gameState.pickedCard = gameState.board[0];
 		const nextGameState = endTurn(gameState);
 		expect(nextGameState.players[0].hand).toContain(gameState.pickedCard);
+		expect(nextGameState.pickedCard).toBeNull();
 	});
 
 	it('should switch to the next player', () => {

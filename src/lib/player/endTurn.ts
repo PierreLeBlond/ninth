@@ -4,6 +4,7 @@ export function endTurn(gameState: GameState): GameState {
 	const nextGameState = structuredClone(gameState);
 
 	nextGameState.players[nextGameState.currentPlayer].hand.push(nextGameState.pickedCard);
+	nextGameState.pickedCard = null;
 
 	nextGameState.currentPlayer = (nextGameState.currentPlayer + 1) % nextGameState.players.length;
 

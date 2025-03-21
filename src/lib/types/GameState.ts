@@ -3,7 +3,7 @@ import type { Player } from './Player';
 
 export type GameState = {
 	currentPlayer: number;
-	players: [Player, Player];
+	players: Player[];
 	board: CardName[];
 	remainingCards: CardName[];
 	discardedCards: CardName[];
