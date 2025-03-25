@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CardName } from '$lib/config';
-	import Card from './Card.svelte';
+	import Card from '../ui/Card.svelte';
 	import { cn } from '$lib/utils/cn';
 
 	type Variant = 'primary' | 'secondary' | 'neutral';
@@ -24,13 +24,13 @@
 	let open = $state(false);
 
 	const variants = {
-		primary: 'bg-primary-background text-primary-foreground',
-		secondary: 'bg-secondary-background text-secondary-foreground',
-		neutral: 'bg-gray-200 text-gray-500'
+		primary: 'border-primary-foreground',
+		secondary: 'border-secondary-foreground',
+		neutral: 'border-gray-100'
 	} as const;
 
 	const baseStyles =
-		'aspect-card flex w-full items-center justify-center rounded-md border border-gray-300 text-3xl font-bold text-gray-400';
+		'bg-stone-900 text-stone-200 aspect-card border-b-4 flex w-full items-center justify-center rounded-md border-t border-x text-3xl font-bold text-gray-400';
 </script>
 
 <button
@@ -42,17 +42,26 @@
 </button>
 
 {#if open}
-	<div class="absolute inset-0 grid w-full grid-cols-5 items-center justify-center gap-2 p-2">
-		<button aria-label="close" class="absolute inset-0 bg-black/50" onclick={() => (open = false)}>
+	<div class="absolute inset-0 z-10 grid w-full grid-cols-5 items-center justify-center gap-2 p-2">
+		<button
+			aria-label="close"
+			class="absolute inset-0 bg-black/50 backdrop-blur-xs"
+			onclick={() => (open = false)}
+		>
 		</button>
-		<div class="relative col-span-3 col-start-2 grid grid-cols-subgrid gap-2 pt-16">
+		<div
+			class="pointer-events-none relative col-span-3 col-start-2 grid grid-cols-subgrid gap-2 pt-16"
+		>
 			{#each props.cards as card, index (index)}
-				<Card
-					cardName={card}
-					onChoose={props.choosable ? () => props.onChoose(index) : () => {}}
-					disabled={!props.choosable}
-					variant={props.variant}
-				/>
+				<div class="pointer-events-auto contents">
+					<Card
+						onclick={props.choosable ? () => props.onChoose(index) : () => {}}
+						disabled={!props.choosable}
+						variant={props.variant}
+					>
+						{card}
+					</Card>
+				</div>
 			{/each}
 		</div>
 	</div>

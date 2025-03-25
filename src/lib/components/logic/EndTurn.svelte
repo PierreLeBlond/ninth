@@ -9,17 +9,19 @@
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
 		variant?: Variant;
+		player: number;
 	};
 
-	let { gameState, updateGameState, variant = 'neutral' }: Props = $props();
+	let { gameState, updateGameState, variant = 'neutral', player }: Props = $props();
 
 	const variants = {
-		primary: 'bg-primary-background text-primary-foreground',
-		secondary: 'bg-secondary-background text-secondary-foreground',
-		neutral: 'bg-gray-200 text-gray-500'
+		primary: 'border-primary-foreground text-primary-foreground',
+		secondary: 'border-secondary-foreground text-secondary-foreground',
+		neutral: 'border-gray-100 text-gray-500'
 	} as const;
 
-	const baseStyles = 'w-full rounded-md p-2 font-bold';
+	const baseStyles =
+		'bg-stone-100 border w-full rounded-md p-2 font-bold disabled:text-gray-300 disabled:border-gray-300';
 
 	const handleEndTurn = () => {
 		const newGameState = endTurn($state.snapshot(gameState));
@@ -30,7 +32,7 @@
 <button
 	class={cn(baseStyles, variants[variant])}
 	onclick={handleEndTurn}
-	disabled={gameState.pickedCard === null}
+	disabled={gameState.pickedCard === null || gameState.currentPlayer !== player}
 >
 	End turn
 </button>
