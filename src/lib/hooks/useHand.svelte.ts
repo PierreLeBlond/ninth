@@ -7,8 +7,6 @@ export const useHand = (params: { gameState: GameState; player: number }) => {
 		params.gameState.players[params.player].hand.filter((_, index) => index !== drawnCardIndex)
 	);
 
-	$inspect(hand);
-
 	const drawCard = (index: number) => {
 		drawnCardIndex = index;
 	};

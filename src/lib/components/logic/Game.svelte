@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { prepare } from '$lib/game/prepare';
 	import { useHistory } from '$lib/hooks/useHistory.svelte';
 	import type { GameState } from '$lib/types/GameState';
-	import History from './History.svelte';
+	import History from '../ui/History.svelte';
 	import { isOver } from '$lib/game/isOver';
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
