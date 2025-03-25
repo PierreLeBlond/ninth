@@ -6,6 +6,7 @@
 	import EndTurn from './EndTurn.svelte';
 	import Info from './Info.svelte';
 	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
+	import { useHand } from '$lib/hooks/useHand.svelte';
 
 	type Props = {
 		gameState: GameState;
@@ -14,8 +15,14 @@
 
 	let { gameState, updateGameState }: Props = $props();
 
-	// This is one of a player's hand cards
-	let selectedCardIndex = $state<number | null>(null);
+	const hands = gameState.players.map((_, index) =>
+		useHand({
+			get gameState() {
+				return gameState;
+			},
+			player: index
+		})
+	);
 </script>
 
 <div class="grid w-full grid-cols-5 grid-rows-7 gap-2 p-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8">
@@ -40,36 +47,54 @@
 	</div>
 
 	<div class="col-start-1 row-start-2 lg:row-start-6">
-		<Deck cards={gameState.players[0].wonCards} variant={'primary'} />
+		<Deck cards={gameState.players[0].wonCards} variant={'primary'} itemsDisabled />
 	</div>
 	<div class="col-start-5 row-start-6 lg:col-start-11 lg:row-start-6">
-		<Deck cards={gameState.players[1].wonCards} variant={'secondary'} />
+		<Deck cards={gameState.players[1].wonCards} variant={'secondary'} itemsDisabled />
 	</div>
 
 	<div class="row-start-4 lg:col-start-11 lg:row-start-6">
-		<Deck cards={gameState.remainingCards} />
+		<Deck cards={gameState.remainingCards} itemsDisabled />
 	</div>
 
-	<div class="col-start-3 row-start-2 lg:row-start-2">
+	<div class="col-start-4 row-start-2 lg:row-start-2">
 		<Deck
-			cards={gameState.players[0].hand}
-			choosable={gameState.pickedCard !== null}
-			onChoose={(index) => (selectedCardIndex = index)}
+			cards={hands[0].hand}
+			itemsDisabled={gameState.pickedCard === null}
+			onItemClick={(index) => hands[0].drawCard(index)}
 			variant={'primary'}
 		/>
 	</div>
+	<div class="col-start-3 row-start-2 lg:row-start-2">
+		{#if hands[0].drawnCardIndex !== null}
+			<Card onclick={() => hands[0].undrawCard()} disabled={true} variant={'primary'}>
+				{gameState.players[0].hand[hands[0].drawnCardIndex]}
+			</Card>
+		{:else}
+			<EmptyCard disabled={true} variant={'primary'} />
+		{/if}
+	</div>
 
-	<div class="col-start-3 row-start-6">
+	<div class="col-start-2 row-start-6">
 		<Deck
-			cards={gameState.players[1].hand}
-			choosable={gameState.pickedCard !== null}
-			onChoose={(index) => (selectedCardIndex = index)}
+			cards={hands[1].hand}
+			itemsDisabled={gameState.pickedCard === null}
+			onItemClick={(index) => hands[1].drawCard(index)}
 			variant={'secondary'}
 		/>
 	</div>
+	<div class="col-start-3 row-start-6">
+		{#if hands[1].drawnCardIndex !== null}
+			<Card onclick={() => hands[1].undrawCard()} disabled={true} variant={'secondary'}>
+				{gameState.players[1].hand[hands[1].drawnCardIndex]}
+			</Card>
+		{:else}
+			<EmptyCard disabled={true} variant={'secondary'} />
+		{/if}
+	</div>
 
 	<div class="relative col-span-3 col-start-2 row-span-3 row-start-3 lg:col-start-5 lg:row-start-2">
-		<Board {gameState} {updateGameState} handCardIndex={selectedCardIndex} />
+		<Board {gameState} {updateGameState} hand={hands[gameState.currentPlayer]} />
 	</div>
 
 	<div

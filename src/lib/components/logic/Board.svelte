@@ -10,15 +10,15 @@
 
 	type Props = {
 		gameState: GameState;
-		handCardIndex: number | null;
+		hand: { drawnCardIndex: number | null; undrawCard: () => void };
 		updateGameState: (gameState: GameState) => void;
 	};
 
-	let { gameState, handCardIndex, updateGameState }: Props = $props();
+	let { gameState, hand, updateGameState }: Props = $props();
 
 	let canPick = $derived(gameState.pickedCard === null);
 	let canAlignment = $derived(gameState.pickedCard !== null);
-	let canPut = $derived(gameState.pickedCard !== null && handCardIndex !== null);
+	let canPut = $derived(gameState.pickedCard !== null && hand.drawnCardIndex !== null);
 
 	const possibleAlignementElements = [
 		{
@@ -67,10 +67,12 @@
 	};
 
 	const handlePutCard = (index: number) => {
-		if (!canPut || handCardIndex === null) {
+		if (!canPut || hand.drawnCardIndex === null) {
 			return;
 		}
-		const newGameState = putCard($state.snapshot(gameState), index, handCardIndex);
+		const newGameState = putCard($state.snapshot(gameState), index, hand.drawnCardIndex);
+		// Do not forget to undraw the card from player hand. this shouldn't be the board responsibility though.
+		hand.undrawCard();
 		updateGameState(newGameState);
 	};
 

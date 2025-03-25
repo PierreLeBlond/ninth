@@ -11,16 +11,16 @@
 		variant?: Variant;
 	};
 
-	type NotChooseableProps = BaseProps & {
-		choosable?: false;
+	type ItemsDisabledProps = BaseProps & {
+		itemsDisabled: true;
 	};
 
-	type ChooseableProps = BaseProps & {
-		choosable: true;
-		onChoose: (index: number) => void;
+	type ItemsEnabledProps = BaseProps & {
+		itemsDisabled?: false;
+		onItemClick: (index: number) => void;
 	};
 
-	let props: NotChooseableProps | ChooseableProps = $props();
+	let props: ItemsDisabledProps | ItemsEnabledProps = $props();
 	let open = $state(false);
 
 	const variants = {
@@ -31,6 +31,14 @@
 
 	const baseStyles =
 		'bg-stone-900 text-stone-200 aspect-card border-b-4 flex w-full items-center justify-center rounded-md border-t border-x text-3xl font-bold text-gray-400';
+
+	const handleItemClick = (index: number) => {
+		if (props.itemsDisabled) {
+			return;
+		}
+		props.onItemClick(index);
+		open = false;
+	};
 </script>
 
 <button
@@ -55,8 +63,8 @@
 			{#each props.cards as card, index (index)}
 				<div class="pointer-events-auto contents">
 					<Card
-						onclick={props.choosable ? () => props.onChoose(index) : () => {}}
-						disabled={!props.choosable}
+						onclick={() => handleItemClick(index)}
+						disabled={props.itemsDisabled}
 						variant={props.variant}
 					>
 						{card}
