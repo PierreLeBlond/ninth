@@ -5,10 +5,9 @@
 	import { isOver } from '$lib/game/isOver';
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
-	import { getNearEndGame } from '$lib/game/getNearEndGame';
+	import { prepare } from '$lib/game/prepare';
 
-	// const initialGameState = prepare();
-	const initialGameState = getNearEndGame();
+	const initialGameState = prepare();
 	let gameState = $state(initialGameState);
 
 	let gameOver = $state(false);
@@ -16,7 +15,6 @@
 	const updateGameStateFromHistory = (updatedGameState: GameState) => {
 		// TODO: Check gamestate validity
 		gameState = updatedGameState;
-		// TODO: End game if necessary
 		gameOver = isOver(gameState);
 	};
 

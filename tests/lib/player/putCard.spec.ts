@@ -40,7 +40,7 @@ describe('putCard', () => {
 		const nextGameState = putCard(gameState, 0, 0);
 		expectValidGameState(nextGameState);
 
-		expect(nextGameState.board[0]).toBe(gameState.players[0].hand[0]);
+		expect(nextGameState.board[0].index).toBe(gameState.players[0].hand[0].index);
 	});
 
 	it('should return a modified deep copy of the game state', () => {

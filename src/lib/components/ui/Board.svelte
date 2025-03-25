@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Card from '$lib/components/ui/Card.svelte';
+	import CardComponent from '$lib/components/ui/Card.svelte';
 	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
-	import type { CardName } from '$lib/config';
+	import type { Card } from '$lib/types/Card';
 
 	type Props = {
-		board: CardName[];
+		board: Card[];
 	};
 
 	type CardDisabledProps = {
@@ -49,9 +49,9 @@
 <div class="grid grid-cols-3 grid-rows-3 gap-2">
 	{#each props.board as card, index (index)}
 		{#if card !== null}
-			<Card onclick={() => handlePickCard(index)} disabled={props.cardDisabled}>
-				{card}
-			</Card>
+			<CardComponent onclick={() => handlePickCard(index)} disabled={props.cardDisabled}>
+				{card.type}
+			</CardComponent>
 		{:else}
 			<EmptyCard onclick={() => handlePickEmptyCard(index)} disabled={props.emptyCardDisabled} />
 		{/if}

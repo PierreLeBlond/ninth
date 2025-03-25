@@ -79,7 +79,7 @@
 	<div class="col-start-5">
 		{#if players[0].hasPickedACard}
 			<Card disabled={true} variant={'primary'}>
-				{gameState.pickedCard}
+				{gameState.pickedCard.type}
 			</Card>
 		{:else}
 			<EmptyCard disabled={true} variant={'primary'} />
@@ -89,7 +89,7 @@
 	<div class="row-start-6">
 		{#if players[1].hasPickedACard}
 			<Card disabled={true} variant={'secondary'}>
-				{gameState.pickedCard}
+				{gameState.pickedCard.type}
 			</Card>
 		{:else}
 			<EmptyCard disabled={true} variant={'secondary'} />
@@ -118,7 +118,7 @@
 	<div class="col-start-3 row-start-2 lg:row-start-2">
 		{#if players[0].hasDrawnACard}
 			<Card onclick={() => players[0].undrawCard()} variant={'primary'}>
-				{players[0].drawnCard}
+				{players[0].drawnCard.type}
 			</Card>
 		{:else}
 			<EmptyCard disabled={true} variant={'primary'} />
@@ -136,7 +136,7 @@
 	<div class="col-start-3 row-start-6">
 		{#if players[1].hasDrawnACard}
 			<Card onclick={() => players[1].undrawCard()} variant={'secondary'}>
-				{players[1].drawnCard}
+				{players[1].drawnCard.type}
 			</Card>
 		{:else}
 			<EmptyCard disabled={true} variant={'secondary'} />

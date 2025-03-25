@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { CardName } from '$lib/config';
-	import Card from '../ui/Card.svelte';
+	import type { Card } from '$lib/types/Card';
+	import CardComponent from './Card.svelte';
 	import { cn } from '$lib/utils/cn';
 
 	type Variant = 'primary' | 'secondary' | 'neutral';
 
 	type BaseProps = {
-		cards: CardName[];
+		cards: Card[];
 		disabled?: boolean;
 		variant?: Variant;
 	};
@@ -62,13 +62,13 @@
 		>
 			{#each props.cards as card, index (index)}
 				<div class="pointer-events-auto contents">
-					<Card
+					<CardComponent
 						onclick={() => handleItemClick(index)}
 						disabled={props.itemsDisabled}
 						variant={props.variant}
 					>
-						{card}
-					</Card>
+						{card.type}
+					</CardComponent>
 				</div>
 			{/each}
 		</div>

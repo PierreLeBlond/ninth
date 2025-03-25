@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import type { GameState } from '$lib/types/GameState';
-import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_NAMES, BOARD_SIZE } from '$lib/config';
+import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_TYPES, BOARD_SIZE } from '$lib/config';
 
 export function expectValidGameState(gameState: GameState) {
 	// Check basic structure
@@ -28,11 +28,8 @@ export function expectValidGameState(gameState: GameState) {
 		expect(Array.isArray(player.wonCards)).toBe(true);
 	});
 
-	// Check that the board has the correct number of valid cards
+	// Check that the board has the correct number of cards
 	expect(gameState.board).toHaveLength(BOARD_SIZE);
-	gameState.board.forEach((card) => {
-		expect([...CARDS_NAMES, null]).toContain(card);
-	});
 
 	// Check that the whole set of cards is valid
 	const allCards = [
@@ -41,16 +38,21 @@ export function expectValidGameState(gameState: GameState) {
 		...gameState.discardedCards,
 		...gameState.players.flatMap((p) => [...p.hand, ...p.wonCards]),
 		gameState.pickedCard
-	];
+	].filter((card) => card !== null);
 
-	const numberOfCards = allCards.filter((card) => card !== null).length;
+	const numberOfCards = allCards.length;
 
 	// Check that total number of cards is correct
-	expect(numberOfCards).toBe(NUMBER_OF_CARDS_OF_EACH_TYPE * CARDS_NAMES.length);
+	expect(numberOfCards).toBe(NUMBER_OF_CARDS_OF_EACH_TYPE * CARDS_TYPES.length);
 
 	// Check that each card type has the correct number of cards
-	CARDS_NAMES.forEach((cardName) => {
-		const numberOfCardsOfThisType = allCards.filter((card) => card === cardName).length;
+	CARDS_TYPES.forEach((cardType) => {
+		const numberOfCardsOfThisType = allCards.filter((card) => card.type === cardType).length;
 		expect(numberOfCardsOfThisType).toBe(NUMBER_OF_CARDS_OF_EACH_TYPE);
+	});
+
+	// Each card is uniquely indexed
+	Array.from({ length: BOARD_SIZE }, (_, index) => index).forEach((index) => {
+		expect(allCards.find((card) => card.index === index)).not.toBeNull();
 	});
 }

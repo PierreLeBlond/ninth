@@ -14,7 +14,9 @@ describe('endTurn', () => {
 		const gameState = prepare();
 		gameState.pickedCard = gameState.board[0];
 		const nextGameState = endTurn(gameState);
-		expect(nextGameState.players[0].hand).toContain(gameState.pickedCard);
+		expect(
+			nextGameState.players[0].hand.find((card) => card.index === gameState.pickedCard.index)
+		).not.toBeNull();
 		expect(nextGameState.pickedCard).toBeNull();
 	});
 

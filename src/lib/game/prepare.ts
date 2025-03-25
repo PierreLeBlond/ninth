@@ -1,10 +1,13 @@
 import type { GameState } from '$lib/types/GameState';
-import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_NAMES, BOARD_SIZE } from '$lib/config';
+import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_TYPES, BOARD_SIZE } from '$lib/config';
 import { shuffleCards } from '$lib/card/shuffleCards';
 
 export function prepare(): GameState {
-	const allCards = CARDS_NAMES.flatMap((cardName) =>
-		Array.from({ length: NUMBER_OF_CARDS_OF_EACH_TYPE }, () => cardName)
+	const allCards = CARDS_TYPES.flatMap((cardType) =>
+		Array.from({ length: NUMBER_OF_CARDS_OF_EACH_TYPE }, (_, index) => ({
+			type: cardType,
+			index
+		}))
 	);
 
 	const shuffledCards = shuffleCards(allCards);
