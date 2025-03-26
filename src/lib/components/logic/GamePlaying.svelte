@@ -1,11 +1,9 @@
 <script lang="ts">
 	import type { GameState } from '$lib/types/GameState';
 	import Board from '$lib/components/ui/Board.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
 	import Deck from '$lib/components/ui/Deck.svelte';
 	import EndTurn from '$lib/components/ui/Button.svelte';
 	import Info from '$lib/components/ui/Info.svelte';
-	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
 	import { usePlayer } from '$lib/hooks/usePlayer.svelte';
 	import { pickCard } from '$lib/player/pickCard';
 	import { endTurn } from '$lib/player/endTurn';
