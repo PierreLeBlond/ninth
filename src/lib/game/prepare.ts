@@ -3,10 +3,10 @@ import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_TYPES, BOARD_SIZE } from '$lib/conf
 import { shuffleCards } from '$lib/card/shuffleCards';
 
 export function prepare(): GameState {
-	const allCards = CARDS_TYPES.flatMap((cardType) =>
+	const allCards = CARDS_TYPES.flatMap((cardType, typeIndex) =>
 		Array.from({ length: NUMBER_OF_CARDS_OF_EACH_TYPE }, (_, index) => ({
 			type: cardType,
-			index
+			index: typeIndex * NUMBER_OF_CARDS_OF_EACH_TYPE + index
 		}))
 	);
 

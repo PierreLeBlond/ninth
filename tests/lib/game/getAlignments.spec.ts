@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { prepare } from '$lib/game/prepare';
 import { getAlignments } from '$lib/game/getAlignments';
+import type { Card } from '$lib/types/Card';
 
 const horizontalAlignmentBoard = [
 	{ type: 'Mercury', index: 0 },
@@ -11,7 +12,7 @@ const horizontalAlignmentBoard = [
 	null,
 	null,
 	null
-];
+] satisfies (Card | null)[];
 
 const verticalAlignmentBoard = [
 	{ type: 'Mercury', index: 0 },
@@ -23,7 +24,7 @@ const verticalAlignmentBoard = [
 	{ type: 'Mercury', index: 2 },
 	null,
 	null
-];
+] satisfies (Card | null)[];
 
 const doubleAlignmentBoard = [
 	{ type: 'Mercury', index: 0 },
@@ -35,7 +36,7 @@ const doubleAlignmentBoard = [
 	null,
 	null,
 	null
-];
+] satisfies (Card | null)[];
 
 const incompleteAlignmentBoard = [
 	{ type: 'Mercury', index: 0 },
@@ -47,7 +48,7 @@ const incompleteAlignmentBoard = [
 	null,
 	null,
 	null
-];
+] satisfies (Card | null)[];
 
 describe('getAlignments', () => {
 	it('should detect horizontal alignment', () => {

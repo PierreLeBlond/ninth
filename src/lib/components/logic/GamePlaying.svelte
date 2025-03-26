@@ -14,6 +14,7 @@
 	import Alignments from '$lib/components/ui/Alignments.svelte';
 	import { useBoard } from '$lib/hooks/useBoard.svelte';
 	import { useInfo } from '$lib/hooks/useInfo.svelte';
+	import Cards from '../ui/Cards.svelte';
 
 	type Props = {
 		gameState: GameState;
@@ -70,6 +71,9 @@
 	};
 
 	const handleEndTurn = () => {
+		if (players[gameState.currentPlayer].hasDrawnACard) {
+			players[gameState.currentPlayer].undrawCard();
+		}
 		const newGameState = endTurn($state.snapshot(gameState));
 		updateGameState(newGameState);
 	};
@@ -77,23 +81,19 @@
 
 <div class="grid w-full grid-cols-5 grid-rows-7 gap-2 p-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8">
 	<div class="col-start-5">
-		{#if players[0].hasPickedACard}
-			<Card disabled={true} variant={'primary'}>
-				{gameState.pickedCard.type}
-			</Card>
-		{:else}
-			<EmptyCard disabled={true} variant={'primary'} />
-		{/if}
+		<Cards
+			disabled={true}
+			variant={'primary'}
+			cards={players[0].pickedCard ? [players[0].pickedCard] : []}
+		></Cards>
 	</div>
 
 	<div class="row-start-6">
-		{#if players[1].hasPickedACard}
-			<Card disabled={true} variant={'secondary'}>
-				{gameState.pickedCard.type}
-			</Card>
-		{:else}
-			<EmptyCard disabled={true} variant={'secondary'} />
-		{/if}
+		<Cards
+			disabled={true}
+			variant={'secondary'}
+			cards={players[1].pickedCard ? [players[1].pickedCard] : []}
+		></Cards>
 	</div>
 
 	<div class="col-start-1 row-start-2 lg:row-start-6">
@@ -116,13 +116,12 @@
 		/>
 	</div>
 	<div class="col-start-3 row-start-2 lg:row-start-2">
-		{#if players[0].hasDrawnACard}
-			<Card onclick={() => players[0].undrawCard()} variant={'primary'}>
-				{players[0].drawnCard.type}
-			</Card>
-		{:else}
-			<EmptyCard disabled={true} variant={'primary'} />
-		{/if}
+		<Cards
+			disabled={!players[0].hasDrawnACard}
+			onClick={() => players[0].undrawCard()}
+			variant={'primary'}
+			cards={players[0].drawnCard ? [players[0].drawnCard] : []}
+		></Cards>
 	</div>
 
 	<div class="col-start-2 row-start-6">
@@ -134,13 +133,12 @@
 		/>
 	</div>
 	<div class="col-start-3 row-start-6">
-		{#if players[1].hasDrawnACard}
-			<Card onclick={() => players[1].undrawCard()} variant={'secondary'}>
-				{players[1].drawnCard.type}
-			</Card>
-		{:else}
-			<EmptyCard disabled={true} variant={'secondary'} />
-		{/if}
+		<Cards
+			disabled={!players[1].hasDrawnACard}
+			onClick={() => players[1].undrawCard()}
+			variant={'secondary'}
+			cards={players[1].drawnCard ? [players[1].drawnCard] : []}
+		></Cards>
 	</div>
 
 	<div class="relative col-span-3 col-start-2 row-span-3 row-start-3 lg:col-start-5 lg:row-start-2">

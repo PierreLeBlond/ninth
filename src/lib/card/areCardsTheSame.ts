@@ -1,6 +1,6 @@
 import type { Card } from '$lib/types/Card';
 
-export const areCardsTheSame = (cards: Card[]) => {
+export const areCardsTheSame = (cards: (Card | null)[]) => {
 	const firstCard = cards[0];
 	if (firstCard === null) {
 		return false;

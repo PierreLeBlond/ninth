@@ -15,7 +15,7 @@ describe('endTurn', () => {
 		gameState.pickedCard = gameState.board[0];
 		const nextGameState = endTurn(gameState);
 		expect(
-			nextGameState.players[0].hand.find((card) => card.index === gameState.pickedCard.index)
+			nextGameState.players[0].hand.find((card) => card.index === gameState.pickedCard?.index)
 		).not.toBeNull();
 		expect(nextGameState.pickedCard).toBeNull();
 	});
@@ -34,10 +34,13 @@ describe('endTurn', () => {
 		const gameState = prepare();
 		gameState.board[0] = null;
 		gameState.board[1] = null;
-		gameState.remainingCards = ['Mercury', 'Venus'];
+		gameState.remainingCards = [
+			{ type: 'Mercury', index: 0 },
+			{ type: 'Venus', index: 1 }
+		];
 		const nextGameState = endTurn(gameState);
-		expect(nextGameState.board[0]).toBe('Mercury');
-		expect(nextGameState.board[1]).toBe('Venus');
+		expect(nextGameState.board[0]).toEqual({ type: 'Mercury', index: 0 });
+		expect(nextGameState.board[1]).toEqual({ type: 'Venus', index: 1 });
 		expect(nextGameState.remainingCards).toHaveLength(0);
 	});
 });

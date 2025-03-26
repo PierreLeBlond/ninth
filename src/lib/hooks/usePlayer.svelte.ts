@@ -9,9 +9,11 @@ export const usePlayer = (params: { gameState: GameState; player: number }) => {
 		player: params.player
 	});
 
-	let hasPickedACard = $derived(
-		params.gameState.currentPlayer === params.player && params.gameState.pickedCard !== null
+	let pickedCard = $derived(
+		params.gameState.currentPlayer === params.player ? params.gameState.pickedCard : null
 	);
+
+	let hasPickedACard = $derived(pickedCard !== null);
 
 	let hasDrawnACard = $derived(hand.drawnCardIndex !== null);
 
@@ -24,6 +26,9 @@ export const usePlayer = (params: { gameState: GameState; player: number }) => {
 	let isCurrentPlayer = $derived(params.gameState.currentPlayer === params.player);
 
 	return {
+		get pickedCard() {
+			return pickedCard;
+		},
 		get hasPickedACard() {
 			return hasPickedACard;
 		},

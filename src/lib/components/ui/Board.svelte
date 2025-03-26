@@ -2,9 +2,12 @@
 	import CardComponent from '$lib/components/ui/Card.svelte';
 	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
 	import type { Card } from '$lib/types/Card';
+	import { crossfade } from '$lib/utils/crossfade';
+
+	const [send, receive] = crossfade;
 
 	type Props = {
-		board: Card[];
+		board: (Card | null)[];
 	};
 
 	type CardDisabledProps = {
@@ -47,13 +50,27 @@
 </script>
 
 <div class="grid grid-cols-3 grid-rows-3 gap-2">
-	{#each props.board as card, index (index)}
-		{#if card !== null}
-			<CardComponent onclick={() => handlePickCard(index)} disabled={props.cardDisabled}>
-				{card.type}
-			</CardComponent>
-		{:else}
+	{#each props.board as card, index (card ? card.index : `empty-${index}`)}
+		<div
+			class="relative"
+			style="grid-column: {(index % 3) + 1} / {(index % 3) + 2}; grid-row: {Math.floor(index / 3) +
+				1} / {Math.floor(index / 3) + 2};"
+		>
 			<EmptyCard onclick={() => handlePickEmptyCard(index)} disabled={props.emptyCardDisabled} />
+		</div>
+		{#if card !== null}
+			<div
+				class="relative"
+				in:receive|global={{ key: card.index }}
+				out:send|global={{ key: card.index }}
+				style="grid-column: {(index % 3) + 1} / {(index % 3) + 2}; grid-row: {Math.floor(
+					index / 3
+				) + 1} / {Math.floor(index / 3) + 2};"
+			>
+				<CardComponent onclick={() => handlePickCard(index)} disabled={props.cardDisabled}>
+					{card.type}
+				</CardComponent>
+			</div>
 		{/if}
 	{/each}
 </div>

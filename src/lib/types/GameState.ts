@@ -1,11 +1,11 @@
-import type { CardName } from '$lib/config';
+import type { Card } from './Card';
 import type { Player } from './Player';
 
 export type GameState = {
 	currentPlayer: number;
 	players: Player[];
-	board: CardName[];
-	remainingCards: CardName[];
-	discardedCards: CardName[];
-	pickedCard: CardName | null;
+	board: (Card | null)[];
+	remainingCards: Card[];
+	discardedCards: Card[];
+	pickedCard: Card | null;
 };

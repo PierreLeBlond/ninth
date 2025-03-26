@@ -2,6 +2,9 @@
 	import type { Card } from '$lib/types/Card';
 	import CardComponent from './Card.svelte';
 	import { cn } from '$lib/utils/cn';
+	import { crossfade } from '$lib/utils/crossfade';
+
+	const [send, receive] = crossfade;
 
 	type Variant = 'primary' | 'secondary' | 'neutral';
 
@@ -30,7 +33,7 @@
 	} as const;
 
 	const baseStyles =
-		'bg-stone-900 text-stone-200 aspect-card border-b-4 flex w-full items-center justify-center rounded-md border-t border-x text-3xl font-bold text-gray-400';
+		'absolute inset-0 bg-stone-900 text-stone-200 aspect-card flex w-full items-center justify-center rounded-md border border text-3xl font-bold text-gray-400';
 
 	const handleItemClick = (index: number) => {
 		if (props.itemsDisabled) {
@@ -41,13 +44,28 @@
 	};
 </script>
 
-<button
-	class={cn(baseStyles, variants[props.variant ?? 'neutral'])}
-	disabled={props.disabled}
-	onclick={() => (open = !open)}
->
-	{props.cards.length}
-</button>
+<div class="relative h-full w-full">
+	{#each props.cards as card, index (card.index)}
+		<div
+			class="absolute inset-0"
+			in:receive|global={{ key: card.index }}
+			out:send|global={{ key: card.index }}
+			style="transform: translateY(-{index * 0.2}px)"
+		>
+			<CardComponent disabled={true} variant={props.variant}>
+				{card.type}
+			</CardComponent>
+		</div>
+	{/each}
+	<button
+		class={cn(baseStyles, variants[props.variant ?? 'neutral'])}
+		style="transform: translateY(-{props.cards.length * 0.2}px)"
+		disabled={props.disabled}
+		onclick={() => (open = !open)}
+	>
+		{props.cards.length}
+	</button>
+</div>
 
 {#if open}
 	<div class="absolute inset-0 z-10 grid w-full grid-cols-5 items-center justify-center gap-2 p-2">

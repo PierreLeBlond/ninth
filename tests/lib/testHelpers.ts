@@ -52,7 +52,7 @@ export function expectValidGameState(gameState: GameState) {
 	});
 
 	// Each card is uniquely indexed
-	Array.from({ length: BOARD_SIZE }, (_, index) => index).forEach((index) => {
-		expect(allCards.find((card) => card.index === index)).not.toBeNull();
+	Array.from({ length: numberOfCards }, (_, index) => index).forEach((index) => {
+		expect(allCards.find((card) => card.index === index) ?? null).not.toBeNull();
 	});
 }
