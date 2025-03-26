@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run"
+		"test": "npm run test:unit -- --run",
+		"start:ws": "node src/lib/ws/server.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -25,6 +26,7 @@
 		"@tailwindcss/vite": "^4.0.0",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/svelte": "^5.2.4",
+		"dotenv": "^16.4.7",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
@@ -49,6 +51,8 @@
 	"dependencies": {
 		"@tailwindcss/cli": "^4.0.15",
 		"clsx": "^2.1.1",
+		"socket.io": "^4.8.1",
+		"socket.io-client": "^4.8.1",
 		"tailwind-merge": "^3.0.2"
 	}
 }

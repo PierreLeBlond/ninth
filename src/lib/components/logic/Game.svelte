@@ -6,26 +6,48 @@
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
 	import { prepare } from '$lib/game/prepare';
+	import { useSocket } from '$lib/hooks/useSocket.svelte';
 
 	const initialGameState = prepare();
 	let gameState = $state(initialGameState);
 
 	let gameOver = $state(false);
 
+	// History management. Not send to other clients. Another client emit will reset the history though.
 	const updateGameStateFromHistory = (updatedGameState: GameState) => {
-		// TODO: Check gamestate validity
-		gameState = updatedGameState;
-		gameOver = isOver(gameState);
+		updateGameStateCore(updatedGameState);
 	};
-
 	const history = useHistory({
 		updateState: updateGameStateFromHistory
 	});
 	history.addState($state.snapshot(initialGameState));
-
-	const updateGameState = (updatedGameState: GameState) => {
+	const addToHistory = (updatedGameState: GameState) => {
 		history.addState($state.snapshot(updatedGameState));
-		updateGameStateFromHistory(updatedGameState);
+	};
+
+	// Communicate between clients
+	const updateGameStateFromWs = (updatedGameState: GameState) => {
+		updateGameStateCore(updatedGameState);
+		addToHistory(updatedGameState);
+	};
+	const { emitGameState } = useSocket({
+		get gameState() {
+			return gameState;
+		},
+		onGameState: updateGameStateFromWs
+	});
+
+	// Will always happen
+	const updateGameStateCore = (updatedGameState: GameState) => {
+		gameState = updatedGameState;
+		gameOver = isOver(gameState);
+	};
+
+	// Update from in game player actions
+	const updateGameState = (updatedGameState: GameState) => {
+		updateGameStateCore(updatedGameState);
+		addToHistory(updatedGameState);
+		emitGameState(updatedGameState);
 	};
 </script>
 
