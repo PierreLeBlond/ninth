@@ -77,7 +77,9 @@
 	};
 </script>
 
-<div class="grid w-full grid-cols-5 grid-rows-7 gap-2 p-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8">
+<div
+	class="grid max-h-full grid-cols-5 grid-rows-7 gap-2 px-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8"
+>
 	<div class="col-start-5">
 		<Cards
 			disabled={true}
