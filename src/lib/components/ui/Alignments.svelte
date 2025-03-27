@@ -1,13 +1,21 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/cn';
 
-	type Props = {
+	type BaseProps = {
 		alignments: number[][];
-		onAlignmentClick: (indexes: number[]) => void;
 		variant: 'primary' | 'secondary';
 	};
 
-	let props: Props = $props();
+	type DisabledProps = BaseProps & {
+		disabled: true;
+	};
+
+	type EnabledProps = BaseProps & {
+		disabled?: false;
+		onAlignmentClick: (indexes: number[]) => void;
+	};
+
+	let props: DisabledProps | EnabledProps = $props();
 
 	const variants = {
 		primary: 'border-primary-foreground shadow-primary-foreground',
@@ -52,6 +60,13 @@
 			return alignmentElement;
 		});
 	});
+
+	const handleAlignmentClick = (indexes: number[]) => {
+		if (props.disabled) {
+			return;
+		}
+		props.onAlignmentClick(indexes);
+	};
 </script>
 
 {#each alignmentElements as alignmentElement, index (index)}
@@ -59,9 +74,10 @@
 		aria-label="Take alignment"
 		class={cn(
 			alignmentElement.class,
-			'hover:shadow-highlight-md not-disabled:shadow-highlight-sm pointer-events-auto scale-110 rounded-md border-2 transition-shadow',
+			'hover:not-disabled:shadow-highlight-md not-disabled:shadow-highlight-sm pointer-events-auto scale-110 rounded-md border-2 transition-shadow',
 			variants[props.variant]
 		)}
-		onclick={() => props.onAlignmentClick(alignmentElement.cardIndexes)}
+		disabled={props.disabled}
+		onclick={() => handleAlignmentClick(alignmentElement.cardIndexes)}
 	></button>
 {/each}

@@ -12,22 +12,15 @@
 	import Alignments from '$lib/components/ui/Alignments.svelte';
 	import { useBoard } from '$lib/hooks/useBoard.svelte';
 	import { useInfo } from '$lib/hooks/useInfo.svelte';
-	import Cards from '../ui/Cards.svelte';
+	import Cards from '$lib/components/ui/Cards.svelte';
 
 	type Props = {
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
-		player: number;
+		playerId: number;
 	};
 
-	const { gameState, updateGameState, player }: Props = $props();
-
-	let otherPlayer = $derived(player === 0 ? 1 : 0);
-
-	let playerVariant: 'primary' | 'secondary' = $derived(player === 0 ? 'primary' : 'secondary');
-	let otherPlayerVariant: 'primary' | 'secondary' = $derived(
-		player === 0 ? 'secondary' : 'primary'
-	);
+	const { gameState, updateGameState, playerId }: Props = $props();
 
 	const players = gameState.players.map((_, index) =>
 		usePlayer({
@@ -38,20 +31,31 @@
 		})
 	);
 
-	const infos = players.map((player) =>
-		useInfo({
-			get player() {
-				return player;
-			}
-		})
+	let player = $derived(players[playerId]);
+
+	let otherPlayerId = $derived(playerId === 0 ? 1 : 0);
+	let otherPlayer = $derived(players[otherPlayerId]);
+
+	// TODO: This is a bit redundant with the `isActive` property in the `usePlayer` hook, should be refactored.
+	let activePlayer = $derived(players[gameState.activePlayer]);
+
+	let playerVariant: 'primary' | 'secondary' = $derived(playerId === 0 ? 'primary' : 'secondary');
+	let otherPlayerVariant: 'primary' | 'secondary' = $derived(
+		playerId === 0 ? 'secondary' : 'primary'
 	);
+
+	const info = useInfo({
+		get player() {
+			return player;
+		}
+	});
 
 	const board = useBoard({
 		get gameState() {
 			return gameState;
 		},
-		get currentPlayer() {
-			return players[gameState.currentPlayer];
+		get activePlayer() {
+			return activePlayer;
 		}
 	});
 
@@ -61,13 +65,13 @@
 	};
 
 	const handlePutCard = (index: number) => {
-		const drawnCardIndex = players[gameState.currentPlayer].drawnCardIndex;
+		const drawnCardIndex = activePlayer.drawnCardIndex;
 		if (drawnCardIndex === null) {
 			throw new Error('No card drawn');
 		}
 		const newGameState = putCard($state.snapshot(gameState), index, drawnCardIndex);
 		// Do not forget to undraw the card from player hand state.
-		players[gameState.currentPlayer].undrawCard();
+		activePlayer.undrawCard();
 		updateGameState(newGameState);
 	};
 
@@ -77,8 +81,8 @@
 	};
 
 	const handleEndTurn = () => {
-		if (players[gameState.currentPlayer].hasDrawnACard) {
-			players[gameState.currentPlayer].undrawCard();
+		if (activePlayer.hasDrawnACard) {
+			activePlayer.undrawCard();
 		}
 		const newGameState = endTurn($state.snapshot(gameState));
 		updateGameState(newGameState);
@@ -92,7 +96,7 @@
 		<Cards
 			disabled={true}
 			variant={otherPlayerVariant}
-			cards={players[otherPlayer].pickedCard ? [players[otherPlayer].pickedCard] : []}
+			cards={otherPlayer.pickedCard ? [otherPlayer.pickedCard] : []}
 		></Cards>
 	</div>
 
@@ -100,19 +104,15 @@
 		<Cards
 			disabled={true}
 			variant={playerVariant}
-			cards={players[player].pickedCard ? [players[player].pickedCard] : []}
+			cards={player.pickedCard ? [player.pickedCard] : []}
 		></Cards>
 	</div>
 
 	<div class="col-start-1 row-start-1 lg:row-start-6">
-		<Deck
-			cards={gameState.players[otherPlayer].wonCards}
-			variant={otherPlayerVariant}
-			itemsDisabled
-		/>
+		<Deck cards={otherPlayer.wonCards} variant={otherPlayerVariant} itemsDisabled disabled={true} />
 	</div>
 	<div class="col-start-5 row-start-5 lg:col-start-11 lg:row-start-6">
-		<Deck cards={gameState.players[player].wonCards} variant={playerVariant} itemsDisabled />
+		<Deck cards={player.wonCards} variant={playerVariant} itemsDisabled />
 	</div>
 
 	<div class="row-start-3 lg:col-start-11 lg:row-start-6">
@@ -121,35 +121,34 @@
 
 	<div class="col-start-4 row-start-1 lg:row-start-2">
 		<Deck
-			cards={players[otherPlayer].hand}
-			itemsDisabled={!players[otherPlayer].hasPickedACard}
-			onItemClick={(index) => players[otherPlayer].drawCard(index)}
+			cards={otherPlayer.hand}
+			itemsDisabled={true}
 			variant={otherPlayerVariant}
+			disabled={true}
 		/>
 	</div>
 	<div class="col-start-3 row-start-1 lg:row-start-2">
 		<Cards
-			disabled={!players[otherPlayer].hasDrawnACard}
-			onClick={() => players[otherPlayer].undrawCard()}
+			disabled={true}
 			variant={otherPlayerVariant}
-			cards={players[otherPlayer].drawnCard ? [players[otherPlayer].drawnCard] : []}
+			cards={otherPlayer.drawnCard ? [otherPlayer.drawnCard] : []}
 		></Cards>
 	</div>
 
 	<div class="col-start-2 row-start-5">
 		<Deck
-			cards={players[player].hand}
-			itemsDisabled={!players[player].hasPickedACard}
-			onItemClick={(index) => players[player].drawCard(index)}
+			cards={player.hand}
+			itemsDisabled={!player.hasPickedACard}
+			onItemClick={(index) => player.drawCard(index)}
 			variant={playerVariant}
 		/>
 	</div>
 	<div class="col-start-3 row-start-5">
 		<Cards
-			disabled={!players[player].hasDrawnACard}
-			onClick={() => players[player].undrawCard()}
+			disabled={!player.hasDrawnACard}
+			onClick={() => player.undrawCard()}
 			variant={playerVariant}
-			cards={players[player].drawnCard ? [players[player].drawnCard] : []}
+			cards={player.drawnCard ? [player.drawnCard] : []}
 		></Cards>
 	</div>
 
@@ -158,15 +157,16 @@
 			board={board.board}
 			onCardClick={handlePickCard}
 			onEmptyCardClick={handlePutCard}
-			cardDisabled={!board.canPick}
-			emptyCardDisabled={!board.canPut}
+			cardDisabled={!player.isActive || !board.canPick}
+			emptyCardDisabled={!player.isActive || !board.canPut}
 		/>
 
 		<div class="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2">
 			<Alignments
 				alignments={board.alignments}
 				onAlignmentClick={handlePickAlignment}
-				variant={gameState.currentPlayer === player ? playerVariant : otherPlayerVariant}
+				disabled={!player.isActive}
+				variant={player.isActive ? playerVariant : otherPlayerVariant}
 			/>
 		</div>
 	</div>
@@ -175,16 +175,12 @@
 		class="col-span-3 col-start-1 row-start-6 flex items-center justify-center text-xl font-bold lg:col-span-3 lg:col-start-5 lg:row-start-1"
 	>
 		<Info variant={playerVariant}>
-			{infos[player].info()}
+			{info.info()}
 		</Info>
 	</div>
 
 	<div class="col-span-2 col-start-4 row-start-6 flex items-center justify-center">
-		<EndTurn
-			onclick={handleEndTurn}
-			variant={playerVariant}
-			disabled={!players[player].hasPickedACard}
-		>
+		<EndTurn onclick={handleEndTurn} variant={playerVariant} disabled={!player.hasPickedACard}>
 			End turn
 		</EndTurn>
 	</div>

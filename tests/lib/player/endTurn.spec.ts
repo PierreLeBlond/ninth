@@ -22,12 +22,12 @@ describe('endTurn', () => {
 
 	it('should switch to the next player', () => {
 		const gameState = prepare();
-		const currentPlayer = gameState.currentPlayer;
+		const currentPlayer = gameState.activePlayer;
 		const numberOfPlayers = gameState.players.length;
 
 		const nextGameState = endTurn(gameState);
 
-		expect(nextGameState.currentPlayer).toBe((currentPlayer + 1) % numberOfPlayers);
+		expect(nextGameState.activePlayer).toBe((currentPlayer + 1) % numberOfPlayers);
 	});
 
 	it('should fill empty places on the board with the remaining cards', () => {

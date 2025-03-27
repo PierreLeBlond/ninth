@@ -3,14 +3,14 @@ import type { GameState } from '$lib/types/GameState';
 
 export const useBoard = (params: {
 	gameState: GameState;
-	currentPlayer: {
+	activePlayer: {
 		hasPickedACard: boolean;
 		hasDrawnACard: boolean;
 	};
 }) => {
-	let canPick = $derived(!params.currentPlayer.hasPickedACard);
-	let canAlignment = $derived(params.currentPlayer.hasPickedACard);
-	let canPut = $derived(params.currentPlayer.hasPickedACard && params.currentPlayer.hasDrawnACard);
+	let canPick = $derived(!params.activePlayer.hasPickedACard);
+	let canAlignment = $derived(params.activePlayer.hasPickedACard);
+	let canPut = $derived(params.activePlayer.hasPickedACard && params.activePlayer.hasDrawnACard);
 
 	let alignments = $derived.by(() => {
 		if (!canAlignment) {

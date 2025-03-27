@@ -20,7 +20,7 @@ export const pickAlignment = (gameState: GameState, alignment: number[]) => {
 	const nextGameState = structuredClone(gameState);
 
 	alignment.forEach((index) => {
-		nextGameState.players[nextGameState.currentPlayer].wonCards.push(nextGameState.board[index]);
+		nextGameState.players[nextGameState.activePlayer].wonCards.push(nextGameState.board[index]);
 		nextGameState.board[index] = null;
 	});
 

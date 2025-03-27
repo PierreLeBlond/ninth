@@ -1,8 +1,6 @@
-export const useInfo = (params: {
-	player: { isCurrentPlayer: boolean; hasPickedACard: boolean };
-}) => {
+export const useInfo = (params: { player: { isActive: boolean; hasPickedACard: boolean } }) => {
 	let info = $derived.by(() => {
-		if (!params.player.isCurrentPlayer) {
+		if (!params.player.isActive) {
 			return `Waiting other player...`;
 		}
 

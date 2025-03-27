@@ -13,7 +13,7 @@ export function expectValidGameState(gameState: GameState) {
 	expect(gameState).toHaveProperty('pickedCard');
 
 	// Check types
-	expect(typeof gameState.currentPlayer).toBe('number');
+	expect(typeof gameState.activePlayer).toBe('number');
 	expect(Array.isArray(gameState.players)).toBe(true);
 	expect(Array.isArray(gameState.board)).toBe(true);
 	expect(Array.isArray(gameState.remainingCards)).toBe(true);

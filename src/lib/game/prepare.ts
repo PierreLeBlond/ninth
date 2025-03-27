@@ -16,7 +16,7 @@ export function prepare(): GameState {
 	const remainingCards = shuffledCards.slice(BOARD_SIZE);
 
 	return {
-		currentPlayer: 0,
+		activePlayer: 0,
 		players: [
 			{ hand: [], wonCards: [] },
 			{ hand: [], wonCards: [] }

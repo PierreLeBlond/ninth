@@ -16,8 +16,8 @@ export const putCard = (gameState: GameState, boardIndex: number, handIndex: num
 
 	const nextGameState = structuredClone(gameState);
 
-	const card = nextGameState.players[nextGameState.currentPlayer].hand[handIndex];
-	nextGameState.players[nextGameState.currentPlayer].hand.splice(handIndex, 1);
+	const card = nextGameState.players[nextGameState.activePlayer].hand[handIndex];
+	nextGameState.players[nextGameState.activePlayer].hand.splice(handIndex, 1);
 	if (!card) {
 		throw new MissingCardError(handIndex, gameState, 'No card on hand');
 	}

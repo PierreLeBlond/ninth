@@ -56,7 +56,10 @@
 			style="grid-column: {(index % 3) + 1} / {(index % 3) + 2}; grid-row: {Math.floor(index / 3) +
 				1} / {Math.floor(index / 3) + 2};"
 		>
-			<EmptyCard onclick={() => handlePickEmptyCard(index)} disabled={props.emptyCardDisabled} />
+			<EmptyCard
+				onclick={() => handlePickEmptyCard(index)}
+				disabled={props.emptyCardDisabled || card !== null}
+			/>
 		</div>
 		{#if card !== null}
 			<div

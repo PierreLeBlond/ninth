@@ -10,11 +10,11 @@
 	import { onDestroy } from 'svelte';
 
 	type Props = {
-		player: number;
-		roomName: string;
+		playerId: number;
+		roomId: string;
 	};
 
-	const { player, roomName }: Props = $props();
+	const { playerId, roomId }: Props = $props();
 
 	const initialGameState = prepare();
 	let gameState = $state(initialGameState);
@@ -39,7 +39,7 @@
 		addToHistory(updatedGameState);
 	};
 	const { emitGameState, disconnect } = useGameSocket({
-		roomId: roomName,
+		roomId: roomId,
 		get gameState() {
 			return gameState;
 		},
@@ -67,6 +67,6 @@
 {#if gameOver}
 	<GameOver {gameState} {updateGameState} />
 {:else}
-	<GamePlaying {gameState} {updateGameState} {player} />
+	<GamePlaying {gameState} {updateGameState} {playerId} />
 {/if}
 <History {...history} />

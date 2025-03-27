@@ -56,7 +56,7 @@ describe('pickAlignment', () => {
 	it('should put alignment in players won cards', () => {
 		const gameState = getGameState();
 		const newGameState = pickAlignment(gameState, [0, 1, 2]);
-		expect(newGameState.players[newGameState.currentPlayer].wonCards).toEqual([
+		expect(newGameState.players[newGameState.activePlayer].wonCards).toEqual([
 			{ type: 'Mercury', index: 0 },
 			{ type: 'Mercury', index: 1 },
 			{ type: 'Mercury', index: 2 }
