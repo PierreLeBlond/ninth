@@ -6,7 +6,15 @@
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
 	import { prepare } from '$lib/game/prepare';
-	import { useSocket } from '$lib/hooks/useSocket.svelte';
+	import { useGameSocket } from '$lib/hooks/ws/useGameSocket.svelte';
+	import { onDestroy } from 'svelte';
+
+	type Props = {
+		player: number;
+		roomName: string;
+	};
+
+	const { player, roomName }: Props = $props();
 
 	const initialGameState = prepare();
 	let gameState = $state(initialGameState);
@@ -30,7 +38,8 @@
 		updateGameStateCore(updatedGameState);
 		addToHistory(updatedGameState);
 	};
-	const { emitGameState } = useSocket({
+	const { emitGameState, disconnect } = useGameSocket({
+		roomId: roomName,
 		get gameState() {
 			return gameState;
 		},
@@ -49,11 +58,15 @@
 		addToHistory(updatedGameState);
 		emitGameState(updatedGameState);
 	};
+
+	onDestroy(() => {
+		disconnect();
+	});
 </script>
 
 {#if gameOver}
 	<GameOver {gameState} {updateGameState} />
 {:else}
-	<GamePlaying {gameState} {updateGameState} />
+	<GamePlaying {gameState} {updateGameState} {player} />
 {/if}
 <History {...history} />

@@ -17,9 +17,17 @@
 	type Props = {
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
+		player: number;
 	};
 
-	let { gameState, updateGameState }: Props = $props();
+	const { gameState, updateGameState, player }: Props = $props();
+
+	let otherPlayer = $derived(player === 0 ? 1 : 0);
+
+	let playerVariant: 'primary' | 'secondary' = $derived(player === 0 ? 'primary' : 'secondary');
+	let otherPlayerVariant: 'primary' | 'secondary' = $derived(
+		player === 0 ? 'secondary' : 'primary'
+	);
 
 	const players = gameState.players.map((_, index) =>
 		usePlayer({
@@ -78,70 +86,74 @@
 </script>
 
 <div
-	class="grid max-h-full grid-cols-5 grid-rows-7 gap-2 px-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8"
+	class="grid max-h-full w-full grid-cols-5 grid-rows-6 gap-2 px-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8"
 >
 	<div class="col-start-5">
 		<Cards
 			disabled={true}
-			variant={'primary'}
-			cards={players[0].pickedCard ? [players[0].pickedCard] : []}
+			variant={otherPlayerVariant}
+			cards={players[otherPlayer].pickedCard ? [players[otherPlayer].pickedCard] : []}
 		></Cards>
 	</div>
 
-	<div class="row-start-6">
+	<div class="row-start-5">
 		<Cards
 			disabled={true}
-			variant={'secondary'}
-			cards={players[1].pickedCard ? [players[1].pickedCard] : []}
+			variant={playerVariant}
+			cards={players[player].pickedCard ? [players[player].pickedCard] : []}
 		></Cards>
 	</div>
 
-	<div class="col-start-1 row-start-2 lg:row-start-6">
-		<Deck cards={gameState.players[0].wonCards} variant={'primary'} itemsDisabled />
+	<div class="col-start-1 row-start-1 lg:row-start-6">
+		<Deck
+			cards={gameState.players[otherPlayer].wonCards}
+			variant={otherPlayerVariant}
+			itemsDisabled
+		/>
 	</div>
-	<div class="col-start-5 row-start-6 lg:col-start-11 lg:row-start-6">
-		<Deck cards={gameState.players[1].wonCards} variant={'secondary'} itemsDisabled />
+	<div class="col-start-5 row-start-5 lg:col-start-11 lg:row-start-6">
+		<Deck cards={gameState.players[player].wonCards} variant={playerVariant} itemsDisabled />
 	</div>
 
-	<div class="row-start-4 lg:col-start-11 lg:row-start-6">
+	<div class="row-start-3 lg:col-start-11 lg:row-start-6">
 		<Deck cards={gameState.remainingCards} itemsDisabled />
 	</div>
 
-	<div class="col-start-4 row-start-2 lg:row-start-2">
+	<div class="col-start-4 row-start-1 lg:row-start-2">
 		<Deck
-			cards={players[0].hand}
-			itemsDisabled={!players[0].hasPickedACard}
-			onItemClick={(index) => players[0].drawCard(index)}
-			variant={'primary'}
+			cards={players[otherPlayer].hand}
+			itemsDisabled={!players[otherPlayer].hasPickedACard}
+			onItemClick={(index) => players[otherPlayer].drawCard(index)}
+			variant={otherPlayerVariant}
 		/>
 	</div>
-	<div class="col-start-3 row-start-2 lg:row-start-2">
+	<div class="col-start-3 row-start-1 lg:row-start-2">
 		<Cards
-			disabled={!players[0].hasDrawnACard}
-			onClick={() => players[0].undrawCard()}
-			variant={'primary'}
-			cards={players[0].drawnCard ? [players[0].drawnCard] : []}
+			disabled={!players[otherPlayer].hasDrawnACard}
+			onClick={() => players[otherPlayer].undrawCard()}
+			variant={otherPlayerVariant}
+			cards={players[otherPlayer].drawnCard ? [players[otherPlayer].drawnCard] : []}
 		></Cards>
 	</div>
 
-	<div class="col-start-2 row-start-6">
+	<div class="col-start-2 row-start-5">
 		<Deck
-			cards={players[1].hand}
-			itemsDisabled={!players[1].hasPickedACard}
-			onItemClick={(index) => players[1].drawCard(index)}
-			variant={'secondary'}
+			cards={players[player].hand}
+			itemsDisabled={!players[player].hasPickedACard}
+			onItemClick={(index) => players[player].drawCard(index)}
+			variant={playerVariant}
 		/>
 	</div>
-	<div class="col-start-3 row-start-6">
+	<div class="col-start-3 row-start-5">
 		<Cards
-			disabled={!players[1].hasDrawnACard}
-			onClick={() => players[1].undrawCard()}
-			variant={'secondary'}
-			cards={players[1].drawnCard ? [players[1].drawnCard] : []}
+			disabled={!players[player].hasDrawnACard}
+			onClick={() => players[player].undrawCard()}
+			variant={playerVariant}
+			cards={players[player].drawnCard ? [players[player].drawnCard] : []}
 		></Cards>
 	</div>
 
-	<div class="relative col-span-3 col-start-2 row-span-3 row-start-3 lg:col-start-5 lg:row-start-2">
+	<div class="relative col-span-3 col-start-2 row-span-3 row-start-2 lg:col-start-5 lg:row-start-2">
 		<Board
 			board={board.board}
 			onCardClick={handlePickCard}
@@ -154,35 +166,25 @@
 			<Alignments
 				alignments={board.alignments}
 				onAlignmentClick={handlePickAlignment}
-				variant={gameState.currentPlayer === 0 ? 'primary' : 'secondary'}
+				variant={gameState.currentPlayer === player ? playerVariant : otherPlayerVariant}
 			/>
 		</div>
 	</div>
 
 	<div
-		class="col-span-3 col-start-3 row-start-1 flex rotate-180 items-center justify-center text-xl font-bold lg:col-span-3 lg:col-start-5 lg:row-start-1"
+		class="col-span-3 col-start-1 row-start-6 flex items-center justify-center text-xl font-bold lg:col-span-3 lg:col-start-5 lg:row-start-1"
 	>
-		<Info variant={'primary'}>
-			{infos[0].info()}
+		<Info variant={playerVariant}>
+			{infos[player].info()}
 		</Info>
 	</div>
 
-	<div
-		class="col-span-3 col-start-1 row-start-7 flex items-center justify-center text-xl font-bold lg:col-span-3 lg:col-start-5 lg:row-start-1"
-	>
-		<Info variant={'secondary'}>
-			{infos[1].info()}
-		</Info>
-	</div>
-
-	<div class="col-span-2 col-start-1 row-start-1 flex rotate-180 items-center justify-center">
-		<EndTurn onclick={handleEndTurn} variant={'primary'} disabled={!players[0].hasPickedACard}>
-			End turn
-		</EndTurn>
-	</div>
-
-	<div class="col-span-2 col-start-4 row-start-7 flex items-center justify-center">
-		<EndTurn onclick={handleEndTurn} variant={'secondary'} disabled={!players[1].hasPickedACard}>
+	<div class="col-span-2 col-start-4 row-start-6 flex items-center justify-center">
+		<EndTurn
+			onclick={handleEndTurn}
+			variant={playerVariant}
+			disabled={!players[player].hasPickedACard}
+		>
 			End turn
 		</EndTurn>
 	</div>
