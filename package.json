@@ -14,7 +14,7 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"start:ws": "node src/lib/ws/server.js"
+		"start:ws": "node static/server.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

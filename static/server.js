@@ -1,9 +1,13 @@
 import { Server } from 'socket.io';
+import { createServer } from 'http';
 import 'dotenv/config';
 
-const io = new Server(3000, {
+const server = createServer();
+
+const io = new Server(server, {
 	cors: {
-		origin: process.env.APP_DOMAIN
+		origin: process.env.APP_DOMAIN,
+		methods: ['GET', 'POST']
 	}
 });
 
@@ -23,11 +27,11 @@ io.on('connection', (socket) => {
 	socket.emit('rooms', getRooms());
 });
 
-roomNamespace.adapter.on('create-room', (room) => {
+roomNamespace.adapter.on('create-room', () => {
 	io.emit('rooms', getRooms());
 });
 
-roomNamespace.adapter.on('delete-room', (room) => {
+roomNamespace.adapter.on('delete-room', () => {
 	io.emit('rooms', getRooms());
 });
 
@@ -69,3 +73,5 @@ roomNamespace.adapter.on('create-room', (room) => {
 roomNamespace.adapter.on('join-room', (room, id) => {
 	console.log(`socket ${id} has joined room ${room}`);
 });
+
+server.listen(process.env.WS_PORT);

@@ -1,0 +1,13 @@
+{
+	"name": "ninth ws server",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"start:ws": "node static/server.js"
+	},
+	"dependencies": {
+		"socket.io": "^4.8.1",
+		"dotenv": "^16.4.7"
+	}
+}

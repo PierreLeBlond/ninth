@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	let roomName: string | null = $state(null);
 
@@ -12,7 +13,7 @@
 {#if roomName === null}
 	<p>No room name provided</p>
 {:else}
-	<a href={`/game?player=0&room=${roomName}`}> AS PLAYER I </a>
-	<a href={`/game?player=1&room=${roomName}`}> AS PLAYER II </a>
-	<a href={`/game?room=${roomName}`}> AS SPECTATOR </a>
+	<a href={`${PUBLIC_BASE_URL}/game?player=0&room=${roomName}`}> AS PLAYER I </a>
+	<a href={`${PUBLIC_BASE_URL}/game?player=1&room=${roomName}`}> AS PLAYER II </a>
+	<a href={`${PUBLIC_BASE_URL}/game?room=${roomName}`}> AS SPECTATOR </a>
 {/if}

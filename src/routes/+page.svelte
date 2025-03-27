@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { useSocket } from '$lib/hooks/ws/useSocket.svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	let rooms: string[] = $state([]);
 
@@ -35,7 +36,7 @@
 		<ul>
 			{#each rooms as room}
 				<li>
-					<a href="/lobby?room={room}">
+					<a href={`${PUBLIC_BASE_URL}/lobby?room=${room}`}>
 						{room}
 					</a>
 				</li>
@@ -48,6 +49,6 @@
 			bind:value={roomName}
 			class="rounded-md border-2 border-gray-300 p-2"
 		/>
-		<a href="/lobby?room={roomName}">Create Room</a>
+		<a href={`${PUBLIC_BASE_URL}/lobby?room=${roomName}`}>Create Room</a>
 	{/if}
 </div>
