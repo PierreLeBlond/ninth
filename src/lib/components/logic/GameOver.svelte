@@ -8,9 +8,10 @@
 	type Props = {
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
+		playerId: number;
 	};
 
-	let { gameState, updateGameState }: Props = $props();
+	let { gameState, updateGameState, playerId }: Props = $props();
 
 	const winner = $derived(getWinner(gameState));
 </script>
@@ -22,10 +23,12 @@
 		VS
 		<Deck cards={gameState.players[1].wonCards} variant={'secondary'} itemsDisabled disabled />
 	</div>
-	{#if winner}
-		<h2>The winner is player {winner}</h2>
-	{:else}
+	{#if !winner}
 		<h2>It's a draw</h2>
+	{:else if winner === playerId}
+		<h2>You won !</h2>
+	{:else}
+		<h2>You lost...</h2>
 	{/if}
 	<Button
 		onclick={() => {

@@ -1,6 +1,6 @@
-import type { CardName } from '$lib/config';
+import type { Card } from '$lib/types/Card';
 
 export type Player = {
-	hand: CardName[];
-	wonCards: CardName[];
+	hand: Card[];
+	wonCards: Card[];
 };

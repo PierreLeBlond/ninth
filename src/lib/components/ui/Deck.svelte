@@ -44,7 +44,7 @@
 	};
 </script>
 
-<div class="relative h-full w-full">
+<div class="aspect-card relative w-full">
 	{#each props.cards as card, index (card.index)}
 		<div
 			class="absolute inset-0"

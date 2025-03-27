@@ -5,9 +5,9 @@
 	import { isOver } from '$lib/game/isOver';
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
-	import { prepare } from '$lib/game/prepare';
 	import { useGameSocket } from '$lib/hooks/ws/useGameSocket.svelte';
 	import { onDestroy } from 'svelte';
+	import { getNearEndGame } from '$lib/game/getNearEndGame';
 
 	type Props = {
 		playerId: number;
@@ -16,7 +16,8 @@
 
 	const { playerId, roomId }: Props = $props();
 
-	const initialGameState = prepare();
+	//const initialGameState = prepare();
+	const initialGameState = getNearEndGame();
 	let gameState = $state(initialGameState);
 
 	let gameOver = $state(false);
@@ -65,7 +66,7 @@
 </script>
 
 {#if gameOver}
-	<GameOver {gameState} {updateGameState} />
+	<GameOver {gameState} {updateGameState} {playerId} />
 {:else}
 	<GamePlaying {gameState} {updateGameState} {playerId} />
 {/if}
