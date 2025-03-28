@@ -30,6 +30,19 @@ export function moveCard({
 	const outroEasing = quadIn;
 	const introDuration = 0.1;
 	const pauseDuration = 0.2;
+	const introAndPauseDuration = introDuration + pauseDuration;
+
+	const getIntoScaleFactor = (t: number) => {
+		if (t < introDuration) {
+			return outroEasing(t / introDuration);
+		}
+
+		if (t < introAndPauseDuration) {
+			return 1.0;
+		}
+
+		return introEasing((1.0 - t) / (1.0 - introAndPauseDuration));
+	};
 
 	const introduce = (
 		from_node: Element,
@@ -45,8 +58,6 @@ export function moveCard({
 		const to = node.getBoundingClientRect();
 		const dx = from.left - to.left;
 		const dy = from.top - to.top;
-		const dw = from.width / to.width;
-		const dh = from.height / to.height;
 		const d = Math.sqrt(dx * dx + dy * dy);
 		const style = getComputedStyle(node);
 		const transform = style.transform === 'none' ? '' : style.transform;
@@ -59,19 +70,15 @@ export function moveCard({
 			css: (t: number, u: number) => {
 				const translateFactor =
 					1.0 -
-					(t < introDuration + pauseDuration
+					(t < introAndPauseDuration
 						? 0.0
-						: outroEasing((t - introDuration) / (1.0 - introDuration)));
-				const scaleFactor =
-					t < introDuration + pauseDuration
-						? outroEasing(Math.min(t / introDuration, 1.0))
-						: introEasing((1.0 - t) / (1.0 - introDuration));
+						: outroEasing((t - introAndPauseDuration) / (1.0 - introAndPauseDuration)));
+				const scaleFactor = getIntoScaleFactor(t);
 				const opacityFactor = t < introDuration ? outroEasing(t / introDuration) : 1.0;
 				return `
 					z-index: 11;
-			   opacity: ${opacityFactor * opacity};
-			   transform-origin: top left;
-			   transform: ${transform} translate(${translateFactor * dx}px,${translateFactor * dy}px) scale(${1.0 + scaleFactor * 0.5}, ${1.0 + scaleFactor * 0.5});
+			   	opacity: ${opacityFactor * opacity};
+			   	transform: ${transform} translate(${translateFactor * dx}px,${translateFactor * dy}px) scale(${1.0 + scaleFactor * 0.5}, ${1.0 + scaleFactor * 0.5});
 		   `;
 			}
 		};
@@ -87,8 +94,6 @@ export function moveCard({
 		const to = node.getBoundingClientRect();
 		const dx = from.left - to.left;
 		const dy = from.top - to.top;
-		const dw = from.width / to.width;
-		const dh = from.height / to.height;
 		const d = Math.sqrt(dx * dx + dy * dy);
 		const style = getComputedStyle(node);
 		const transform = style.transform === 'none' ? '' : style.transform;
@@ -99,16 +104,12 @@ export function moveCard({
 			duration: totalDuration,
 			easing,
 			css: (t: number, u: number) => {
-				const scaleFactor =
-					u < introDuration
-						? outroEasing(u / introDuration)
-						: introEasing((1.0 - u) / (1.0 - introDuration));
+				const scaleFactor = u < introDuration ? outroEasing(u / introDuration) : 1.0;
 				const opacityFactor = u < introDuration ? 1.0 : 0.0;
 				return `
 					z-index: 10;
-			   opacity: ${opacityFactor * opacity};
-			   transform-origin: top left;
-			   transform: ${transform} scale(${1.0 + scaleFactor * 0.5}, ${1.0 + scaleFactor * 0.5});
+			   	opacity: ${opacityFactor * opacity};
+			   	transform: ${transform} scale(${1.0 + scaleFactor * 0.5}, ${1.0 + scaleFactor * 0.5});
 		   `;
 			}
 		};

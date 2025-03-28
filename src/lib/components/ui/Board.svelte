@@ -2,7 +2,6 @@
 	import CardComponent from '$lib/components/ui/Card.svelte';
 	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
 	import type { Card } from '$lib/types/Card';
-	import { cn } from '$lib/utils/cn';
 	import { crossfade } from '$lib/utils/crossfade';
 
 	const [send, receive] = crossfade;
@@ -34,12 +33,14 @@
 		(CardDisabledProps | CardEnabledProps) &
 		(EmptyCardDisabledProps | EmptyCardEnabledProps) = $props();
 
+	let board = $derived(props.reverse ? props.board.slice().reverse() : props.board);
+
 	const handlePickCard = (index: number) => {
 		if (props.cardDisabled) {
 			return;
 		}
 
-		props.onCardClick(index);
+		props.onCardClick(props.reverse ? props.board.length - 1 - index : index);
 	};
 
 	const handlePickEmptyCard = (index: number) => {
@@ -47,12 +48,12 @@
 			return;
 		}
 
-		props.onEmptyCardClick(index);
+		props.onEmptyCardClick(props.reverse ? props.board.length - 1 - index : index);
 	};
 </script>
 
-<div class={cn('grid grid-cols-3 grid-rows-3 gap-2', props.reverse && 'rotate-180')}>
-	{#each props.board as card, index (card ? card.index : `empty-${index}`)}
+<div class={'grid grid-cols-3 grid-rows-3 gap-2'}>
+	{#each board as card, index (card ? card.index : `empty-${index}`)}
 		<div
 			class="relative"
 			style="grid-column: {(index % 3) + 1} / {(index % 3) + 2}; grid-row: {Math.floor(index / 3) +
