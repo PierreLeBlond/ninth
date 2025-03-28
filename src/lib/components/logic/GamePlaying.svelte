@@ -125,13 +125,6 @@
 			disabled={true}
 		/>
 	</div>
-	<div class="col-start-3 row-start-1 lg:row-start-2">
-		<Cards
-			disabled={true}
-			variant={otherPlayerVariant}
-			cards={otherPlayer.drawnCard ? [otherPlayer.drawnCard] : []}
-		></Cards>
-	</div>
 
 	<div class="col-start-2 row-start-5">
 		<Deck
