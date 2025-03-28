@@ -2,12 +2,14 @@
 	import CardComponent from '$lib/components/ui/Card.svelte';
 	import EmptyCard from '$lib/components/ui/EmptyCard.svelte';
 	import type { Card } from '$lib/types/Card';
+	import { cn } from '$lib/utils/cn';
 	import { crossfade } from '$lib/utils/crossfade';
 
 	const [send, receive] = crossfade;
 
 	type Props = {
 		board: (Card | null)[];
+		reverse?: boolean;
 	};
 
 	type CardDisabledProps = {
@@ -49,7 +51,7 @@
 	};
 </script>
 
-<div class="grid grid-cols-3 grid-rows-3 gap-2">
+<div class={cn('grid grid-cols-3 grid-rows-3 gap-2', props.reverse && 'rotate-180')}>
 	{#each props.board as card, index (card ? card.index : `empty-${index}`)}
 		<div
 			class="relative"

@@ -31,18 +31,16 @@
 		})
 	);
 
-	let player = $derived(players[playerId]);
+	let player = players[playerId];
 
-	let otherPlayerId = $derived(playerId === 0 ? 1 : 0);
-	let otherPlayer = $derived(players[otherPlayerId]);
+	let otherPlayerId = playerId === 0 ? 1 : 0;
+	let otherPlayer = players[otherPlayerId];
 
 	// TODO: This is a bit redundant with the `isActive` property in the `usePlayer` hook, should be refactored.
 	let activePlayer = $derived(players[gameState.activePlayer]);
 
-	let playerVariant: 'primary' | 'secondary' = $derived(playerId === 0 ? 'primary' : 'secondary');
-	let otherPlayerVariant: 'primary' | 'secondary' = $derived(
-		playerId === 0 ? 'secondary' : 'primary'
-	);
+	let playerVariant: 'primary' | 'secondary' = playerId === 0 ? 'primary' : 'secondary';
+	let otherPlayerVariant: 'primary' | 'secondary' = playerId === 0 ? 'secondary' : 'primary';
 
 	const info = useInfo({
 		get player() {
@@ -159,6 +157,7 @@
 			onEmptyCardClick={handlePutCard}
 			cardDisabled={!player.isActive || !board.canPick}
 			emptyCardDisabled={!player.isActive || !board.canPut}
+			reverse={playerId === 1}
 		/>
 
 		<div class="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2">

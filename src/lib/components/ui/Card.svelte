@@ -36,11 +36,16 @@
 
 <button
 	class={cn(
-		'aspect-card not-disabled:shadow-highlight-sm hover:shadow-highlight-md flex w-full items-center justify-center rounded-md border bg-stone-900 text-xs font-bold text-stone-200 shadow-white transition-shadow disabled:shadow-none lg:text-base',
+		'aspect-card not-disabled:shadow-highlight-sm hover:shadow-highlight-md grid w-full grid-cols-1 grid-rows-1 rounded-md border bg-stone-900 p-1 text-xs leading-3 font-bold text-stone-200 shadow-white transition-shadow disabled:shadow-none lg:text-base',
 		variants[props.variant ?? 'neutral']
 	)}
 	onclick={handleClick}
 	disabled={props.disabled}
 >
-	{@render props.children()}
+	<div class="col-start-1 row-start-1 text-start">
+		{@render props.children()}
+	</div>
+	<div class="col-start-1 row-start-1 rotate-180 text-start">
+		{@render props.children()}
+	</div>
 </button>
