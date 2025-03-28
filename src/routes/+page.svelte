@@ -32,22 +32,24 @@
 	{#if !socket.connected}
 		<p>Connecting to server<span class="animate-pulse">...</span></p>
 	{:else}
-		<h2 class="text-2xl font-bold">RO O&nbsp; M&nbsp;&nbsp; S</h2>
-		<div class="flex h-64 w-full overflow-y-hidden">
-			<ul class="flex w-full flex-col gap-2 overflow-y-auto p-4">
-				{#each rooms as room}
-					<li>
-						<a
-							href={`${PUBLIC_BASE_URL}/lobby?room=${room}`}
-							class="hover:shadow-highlight-md flex w-full items-center justify-center rounded-sm border border-white p-2 shadow-white"
-						>
-							{room}
-						</a>
-					</li>
-				{/each}
-			</ul>
+		<h2 class="pl-4 text-2xl font-bold">RO O&nbsp; M&nbsp;&nbsp; S</h2>
+		<div class="flex w-full flex-col items-center gap-4">
+			<div class="flex h-64 w-full overflow-y-hidden">
+				<ul class="flex w-full flex-col items-center gap-2 overflow-y-auto p-4">
+					{#each rooms as room}
+						<li>
+							<a
+								href={`${PUBLIC_BASE_URL}/lobby?room=${room}`}
+								class="hover:shadow-highlight-md flex w-32 items-center justify-center rounded-sm border border-white p-2 shadow-white"
+							>
+								{room}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
+			<div class="h-[1px] w-32 bg-white"></div>
 		</div>
-		<div class="mb-8 h-[1px] w-full bg-white"></div>
 		<form
 			class="flex flex-col gap-2 px-4"
 			method="get"
