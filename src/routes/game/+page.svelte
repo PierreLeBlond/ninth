@@ -5,17 +5,18 @@
 
 	let roomId: string | null = $state(null);
 	let playerId: number | null = $state(null);
+	let debug = $state(false);
 
 	onMount(() => {
-		playerId = Number(page.url.searchParams.get('player')) ?? null;
+		const player = page.url.searchParams.get('player');
+		playerId = player ? Number(player) : null;
 		roomId = page.url.searchParams.get('room') ?? null;
+		debug = page.url.searchParams.has('debug');
 	});
 </script>
 
 {#if roomId === null}
 	<p>Waiting for room...</p>
-{:else if playerId === null}
-	<p>Waiting for player...</p>
 {:else}
-	<Game {playerId} {roomId} />
+	<Game {playerId} {roomId} {debug} />
 {/if}

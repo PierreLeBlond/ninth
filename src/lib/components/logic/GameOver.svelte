@@ -8,7 +8,7 @@
 	type Props = {
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
-		playerId: number;
+		playerId: number | null;
 	};
 
 	let { gameState, updateGameState, playerId }: Props = $props();
@@ -26,6 +26,8 @@
 	<h2 class="text-3xl font-bold">
 		{#if !winner}
 			It's a draw
+		{:else if playerId === null}
+			Player {winner} won !
 		{:else if winner === playerId}
 			You won !
 		{:else}

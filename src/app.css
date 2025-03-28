@@ -24,3 +24,5 @@
 		cursor: pointer;
 	}
 }
+
+@custom-variant horizontal (@media (min-aspect-ratio: 32/70));

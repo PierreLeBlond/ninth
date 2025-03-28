@@ -17,36 +17,38 @@
 	type Props = {
 		gameState: GameState;
 		updateGameState: (gameState: GameState) => void;
-		playerId: number;
+		controllablePlayers: number[];
+		reverse?: boolean;
 	};
 
-	const { gameState, updateGameState, playerId }: Props = $props();
+	const { gameState, updateGameState, controllablePlayers, reverse = false }: Props = $props();
 
 	const players = gameState.players.map((_, index) =>
 		usePlayer({
 			get gameState() {
 				return gameState;
 			},
-			player: index
+			player: index,
+			controllablePlayers
 		})
 	);
 
-	let player = players[playerId];
-
-	let otherPlayerId = playerId === 0 ? 1 : 0;
-	let otherPlayer = players[otherPlayerId];
+	let firstPlayer = reverse ? players[1] : players[0];
+	let secondPlayer = reverse ? players[0] : players[1];
 
 	// TODO: This is a bit redundant with the `isActive` property in the `usePlayer` hook, should be refactored.
 	let activePlayer = $derived(players[gameState.activePlayer]);
 
-	let playerVariant: 'primary' | 'secondary' = playerId === 0 ? 'primary' : 'secondary';
-	let otherPlayerVariant: 'primary' | 'secondary' = playerId === 0 ? 'secondary' : 'primary';
+	let firstPlayerVariant: 'primary' | 'secondary' = reverse ? 'secondary' : 'primary';
+	let secondPlayerVariant: 'primary' | 'secondary' = reverse ? 'primary' : 'secondary';
 
-	const info = useInfo({
-		get player() {
-			return player;
-		}
-	});
+	const [firstPlayerInfo, secondPlayerInfo] = [firstPlayer, secondPlayer].map((player) =>
+		useInfo({
+			get player() {
+				return player;
+			}
+		})
+	);
 
 	const board = useBoard({
 		get gameState() {
@@ -88,92 +90,130 @@
 </script>
 
 <div
-	class="grid max-h-full w-full grid-cols-5 grid-rows-6 gap-2 px-2 lg:grid-cols-11 lg:grid-rows-6 lg:p-8"
+	class="horizontal:h-full horizontal:w-auto grid aspect-[32/70] w-full grid-cols-5 grid-rows-7 gap-2 px-2"
 >
-	<div class="col-start-5">
+	<div class="col-start-5 row-start-2">
 		<Cards
 			disabled={true}
-			variant={otherPlayerVariant}
-			cards={otherPlayer.pickedCard ? [otherPlayer.pickedCard] : []}
+			variant={secondPlayerVariant}
+			cards={secondPlayer.pickedCard ? [secondPlayer.pickedCard] : []}
 		></Cards>
 	</div>
 
-	<div class="row-start-5">
+	<div class="row-start-6">
 		<Cards
 			disabled={true}
-			variant={playerVariant}
-			cards={player.pickedCard ? [player.pickedCard] : []}
+			variant={firstPlayerVariant}
+			cards={firstPlayer.pickedCard ? [firstPlayer.pickedCard] : []}
 		></Cards>
 	</div>
 
-	<div class="col-start-1 row-start-1 lg:row-start-6">
-		<Deck cards={otherPlayer.wonCards} variant={otherPlayerVariant} itemsDisabled disabled={true} />
+	<div class="col-start-1 row-start-2">
+		<Deck cards={secondPlayer.wonCards} variant={secondPlayerVariant} itemsDisabled />
 	</div>
-	<div class="col-start-5 row-start-5 lg:col-start-11 lg:row-start-6">
-		<Deck cards={player.wonCards} variant={playerVariant} itemsDisabled />
+	<div class="col-start-5 row-start-6">
+		<Deck cards={firstPlayer.wonCards} variant={firstPlayerVariant} itemsDisabled />
 	</div>
 
-	<div class="row-start-3 lg:col-start-11 lg:row-start-6">
+	<div class="row-start-4">
 		<Deck cards={gameState.remainingCards} itemsDisabled />
 	</div>
 
-	<div class="col-start-4 row-start-1 lg:row-start-2">
+	<div class="col-start-4 row-start-2">
 		<Deck
-			cards={otherPlayer.hand}
-			itemsDisabled={true}
-			variant={otherPlayerVariant}
-			disabled={true}
+			cards={secondPlayer.hand}
+			itemsDisabled={!secondPlayer.isControllable || !secondPlayer.hasPickedACard}
+			onItemClick={(index) => secondPlayer.drawCard(index)}
+			variant={secondPlayerVariant}
+			disabled={!secondPlayer.isControllable}
 		/>
 	</div>
 
-	<div class="col-start-2 row-start-5">
+	{#if secondPlayer.isControllable}
+		<div class="col-start-3 row-start-2">
+			<Cards
+				disabled={!secondPlayer.hasDrawnACard}
+				onClick={() => secondPlayer.undrawCard()}
+				variant={secondPlayerVariant}
+				cards={secondPlayer.drawnCard ? [secondPlayer.drawnCard] : []}
+			></Cards>
+		</div>
+	{/if}
+
+	<div class="col-start-2 row-start-6">
 		<Deck
-			cards={player.hand}
-			itemsDisabled={!player.hasPickedACard}
-			onItemClick={(index) => player.drawCard(index)}
-			variant={playerVariant}
+			cards={firstPlayer.hand}
+			itemsDisabled={!firstPlayer.isControllable || !firstPlayer.hasPickedACard}
+			onItemClick={(index) => firstPlayer.drawCard(index)}
+			variant={firstPlayerVariant}
+			disabled={!firstPlayer.isControllable}
 		/>
 	</div>
-	<div class="col-start-3 row-start-5">
-		<Cards
-			disabled={!player.hasDrawnACard}
-			onClick={() => player.undrawCard()}
-			variant={playerVariant}
-			cards={player.drawnCard ? [player.drawnCard] : []}
-		></Cards>
-	</div>
 
-	<div class="relative col-span-3 col-start-2 row-span-3 row-start-2 lg:col-start-5 lg:row-start-2">
+	{#if firstPlayer.isControllable}
+		<div class="col-start-3 row-start-6">
+			<Cards
+				disabled={!firstPlayer.hasDrawnACard}
+				onClick={() => firstPlayer.undrawCard()}
+				variant={firstPlayerVariant}
+				cards={firstPlayer.drawnCard ? [firstPlayer.drawnCard] : []}
+			></Cards>
+		</div>
+	{/if}
+
+	<div class="relative col-span-3 col-start-2 row-span-3 row-start-3">
 		<Board
 			board={board.board}
 			onCardClick={handlePickCard}
 			onEmptyCardClick={handlePutCard}
-			cardDisabled={!player.isActive || !board.canPick}
-			emptyCardDisabled={!player.isActive || !board.canPut}
-			reverse={playerId === 1}
+			cardDisabled={!activePlayer.isControllable || !board.canPick}
+			emptyCardDisabled={!activePlayer.isControllable || !board.canPut}
+			{reverse}
 		/>
 
 		<div class="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2">
 			<Alignments
 				alignments={board.alignments}
 				onAlignmentClick={handlePickAlignment}
-				disabled={!player.isActive}
-				variant={player.isActive ? playerVariant : otherPlayerVariant}
+				disabled={!activePlayer.isControllable}
+				variant={activePlayer === firstPlayer ? firstPlayerVariant : secondPlayerVariant}
 			/>
 		</div>
 	</div>
 
-	<div
-		class="col-span-3 col-start-1 row-start-6 flex items-center justify-center text-xl font-bold lg:col-span-3 lg:col-start-5 lg:row-start-1"
-	>
-		<Info variant={playerVariant}>
-			{info.info()}
-		</Info>
-	</div>
+	{#if firstPlayer.isControllable}
+		<div class="col-span-3 col-start-1 row-start-7 flex items-center justify-center">
+			<Info variant={firstPlayerVariant}>
+				{firstPlayerInfo.info()}
+			</Info>
+		</div>
 
-	<div class="col-span-2 col-start-4 row-start-6 flex items-center justify-center text-sm">
-		<Button onclick={handleEndTurn} variant={playerVariant} disabled={!player.hasPickedACard}>
-			END TURN
-		</Button>
-	</div>
+		<div class="col-span-2 col-start-4 row-start-7 flex items-center justify-center text-xs">
+			<Button
+				onclick={handleEndTurn}
+				variant={firstPlayerVariant}
+				disabled={!firstPlayer.hasPickedACard}
+			>
+				END TURN
+			</Button>
+		</div>
+	{/if}
+
+	{#if secondPlayer.isControllable}
+		<div class="col-span-3 col-start-3 row-start-1 flex items-center justify-center">
+			<Info variant={secondPlayerVariant}>
+				{secondPlayerInfo.info()}
+			</Info>
+		</div>
+
+		<div class="col-span-2 col-start-1 row-start-1 flex items-center justify-center text-xs">
+			<Button
+				onclick={handleEndTurn}
+				variant={secondPlayerVariant}
+				disabled={!secondPlayer.hasPickedACard}
+			>
+				END TURN
+			</Button>
+		</div>
+	{/if}
 </div>

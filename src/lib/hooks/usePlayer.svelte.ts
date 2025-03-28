@@ -1,7 +1,11 @@
 import type { GameState } from '$lib/types/GameState';
 import { useHand } from './useHand.svelte';
 
-export const usePlayer = (params: { gameState: GameState; player: number }) => {
+export const usePlayer = (params: {
+	gameState: GameState;
+	player: number;
+	controllablePlayers: number[];
+}) => {
 	const hand = useHand({
 		get gameState() {
 			return params.gameState;
@@ -55,6 +59,9 @@ export const usePlayer = (params: { gameState: GameState; player: number }) => {
 		},
 		get wonCards() {
 			return params.gameState.players[params.player].wonCards;
+		},
+		get isControllable() {
+			return params.controllablePlayers.includes(params.player);
 		}
 	};
 };

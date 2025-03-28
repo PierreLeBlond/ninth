@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { useHistory } from '$lib/hooks/useHistory.svelte';
 	import type { GameState } from '$lib/types/GameState';
-	import History from '../ui/History.svelte';
 	import { isOver } from '$lib/game/isOver';
 	import GamePlaying from './GamePlaying.svelte';
 	import GameOver from './GameOver.svelte';
@@ -10,11 +9,12 @@
 	import { getNearEndGame } from '$lib/game/getNearEndGame';
 
 	type Props = {
-		playerId: number;
+		playerId: number | null;
+		debug?: boolean;
 		roomId: string;
 	};
 
-	const { playerId, roomId }: Props = $props();
+	const { playerId, roomId, debug = false }: Props = $props();
 
 	//const initialGameState = prepare();
 	const initialGameState = getNearEndGame();
@@ -63,11 +63,15 @@
 	onDestroy(() => {
 		disconnect();
 	});
+
+	let reverse = $derived(playerId === 1);
+
+	let controllablePlayers = $derived(debug ? [0, 1] : playerId !== null ? [playerId] : []);
 </script>
 
 {#if gameOver}
 	<GameOver {gameState} {updateGameState} {playerId} />
 {:else}
-	<GamePlaying {gameState} {updateGameState} {playerId} />
+	<GamePlaying {gameState} {updateGameState} {controllablePlayers} {reverse} />
 {/if}
 <!--History {...history} /-->
