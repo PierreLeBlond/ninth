@@ -2,7 +2,8 @@
 @plugin '@tailwindcss/typography';
 
 @theme inline {
-	--font-sans: 'Ubuntu', 'Inter', sans-serif;
+	--font-sans: 'Tomorrow', 'Inter', sans-serif;
+	--font-title: 'Ubuntu', 'Inter', sans-serif;
 
 	--aspect-card: 54/85;
 

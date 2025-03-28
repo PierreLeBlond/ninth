@@ -6,8 +6,9 @@
 
 	type Props = {
 		variant?: Variant;
+		href?: string;
 		children: Snippet;
-		onclick: () => void;
+		class?: string;
 	};
 
 	type DisabledProps = {
@@ -16,25 +17,42 @@
 
 	type EnabledProps = {
 		disabled?: false;
-		onclick: () => void;
+		onclick?: () => void;
 	};
 
 	let props: Props & (DisabledProps | EnabledProps) = $props();
 
 	const variants = {
-		primary: 'border-primary-foreground text-primary-foreground',
-		secondary: 'border-secondary-foreground text-secondary-foreground',
-		neutral: 'border-gray-100 text-gray-500'
+		primary: 'border-primary-foreground shadow-primary-foreground',
+		secondary: 'border-secondary-foreground shadow-secondary-foreground',
+		neutral: 'border-white shadow-white'
 	} as const;
 
 	const baseStyles =
-		'bg-stone-100 border w-full rounded-md p-2 font-bold disabled:text-gray-300 disabled:border-gray-300';
+		'bg-black text-white flex items-center justify-center border w-full rounded-md py-2 px-4 font-bold disabled:text-gray-800 disabled:border-gray-800 hover:not-disabled:shadow-highlight-md';
+
+	const button = props.href ? 'a' : 'button';
+
+	const handleClick = () => {
+		if (props.disabled) {
+			return;
+		}
+
+		if (!props.onclick) {
+			return;
+		}
+
+		props.onclick();
+	};
 </script>
 
-<button
-	class={cn(baseStyles, variants[props.variant ?? 'neutral'])}
-	onclick={props.onclick}
+<svelte:element
+	this={button}
+	class={cn(baseStyles, variants[props.variant ?? 'neutral'], props.class)}
+	onclick={handleClick}
 	disabled={props.disabled}
+	role={props.href ? 'link' : 'button'}
+	href={props.href}
 >
 	{@render props.children()}
-</button>
+</svelte:element>

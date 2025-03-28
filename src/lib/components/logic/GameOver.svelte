@@ -23,13 +23,15 @@
 		VS
 		<Deck cards={gameState.players[1].wonCards} variant={'secondary'} itemsDisabled disabled />
 	</div>
-	{#if !winner}
-		<h2>It's a draw</h2>
-	{:else if winner === playerId}
-		<h2>You won !</h2>
-	{:else}
-		<h2>You lost...</h2>
-	{/if}
+	<h2 class="text-3xl font-bold">
+		{#if !winner}
+			It's a draw
+		{:else if winner === playerId}
+			You won !
+		{:else}
+			You lost...
+		{/if}
+	</h2>
 	<Button
 		onclick={() => {
 			updateGameState(prepare());

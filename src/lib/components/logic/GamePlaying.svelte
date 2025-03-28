@@ -2,7 +2,7 @@
 	import type { GameState } from '$lib/types/GameState';
 	import Board from '$lib/components/ui/Board.svelte';
 	import Deck from '$lib/components/ui/Deck.svelte';
-	import EndTurn from '$lib/components/ui/Button.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
 	import Info from '$lib/components/ui/Info.svelte';
 	import { usePlayer } from '$lib/hooks/usePlayer.svelte';
 	import { pickCard } from '$lib/player/pickCard';
@@ -179,9 +179,9 @@
 		</Info>
 	</div>
 
-	<div class="col-span-2 col-start-4 row-start-6 flex items-center justify-center">
-		<EndTurn onclick={handleEndTurn} variant={playerVariant} disabled={!player.hasPickedACard}>
-			End turn
-		</EndTurn>
+	<div class="col-span-2 col-start-4 row-start-6 flex items-center justify-center text-sm">
+		<Button onclick={handleEndTurn} variant={playerVariant} disabled={!player.hasPickedACard}>
+			END TURN
+		</Button>
 	</div>
 </div>

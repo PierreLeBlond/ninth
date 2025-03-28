@@ -70,4 +70,4 @@
 {:else}
 	<GamePlaying {gameState} {updateGameState} {playerId} />
 {/if}
-<History {...history} />
+<!--History {...history} /-->
