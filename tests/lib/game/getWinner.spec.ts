@@ -11,14 +11,14 @@ describe('getWinner', () => {
 	it('should return no winner if players have the same score', () => {
 		const gameState = prepare();
 		gameState.players[0].wonCards = [
-			{ type: 'Mercury', index: 0 },
-			{ type: 'Venus', index: 1 },
-			{ type: 'Earth', index: 2 }
+			{ type: 'Me', index: 0 },
+			{ type: 'V', index: 1 },
+			{ type: 'E', index: 2 }
 		];
 		gameState.players[1].wonCards = [
-			{ type: 'Mars', index: 0 },
-			{ type: 'Jupiter', index: 1 },
-			{ type: 'Saturn', index: 2 }
+			{ type: 'Ma', index: 0 },
+			{ type: 'J', index: 1 },
+			{ type: 'Sa', index: 2 }
 		];
 		expect(getWinner(gameState)).toBe(null);
 	});
@@ -26,13 +26,13 @@ describe('getWinner', () => {
 	it('should return the winner if one player has a better score than the others', () => {
 		const gameState = prepare();
 		gameState.players[0].wonCards = [
-			{ type: 'Mercury', index: 0 },
-			{ type: 'Venus', index: 1 },
-			{ type: 'Earth', index: 2 }
+			{ type: 'Me', index: 0 },
+			{ type: 'V', index: 1 },
+			{ type: 'E', index: 2 }
 		];
 		gameState.players[1].wonCards = [
-			{ type: 'Mars', index: 0 },
-			{ type: 'Jupiter', index: 1 }
+			{ type: 'Ma', index: 0 },
+			{ type: 'J', index: 1 }
 		];
 		expect(getWinner(gameState)).toBe(0);
 	});

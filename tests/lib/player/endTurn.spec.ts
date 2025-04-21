@@ -22,12 +22,12 @@ describe('endTurn', () => {
 
 	it('should switch to the next player', () => {
 		const gameState = prepare();
-		const currentPlayer = gameState.activePlayer;
+		const activePlayer = gameState.activePlayer;
 		const numberOfPlayers = gameState.players.length;
 
 		const nextGameState = endTurn(gameState);
 
-		expect(nextGameState.activePlayer).toBe((currentPlayer + 1) % numberOfPlayers);
+		expect(nextGameState.activePlayer).toBe((activePlayer + 1) % numberOfPlayers);
 	});
 
 	it('should fill empty places on the board with the remaining cards', () => {
@@ -35,12 +35,12 @@ describe('endTurn', () => {
 		gameState.board[0] = null;
 		gameState.board[1] = null;
 		gameState.remainingCards = [
-			{ type: 'Mercury', index: 0 },
-			{ type: 'Venus', index: 1 }
+			{ type: 'Me', index: 0 },
+			{ type: 'V', index: 1 }
 		];
 		const nextGameState = endTurn(gameState);
-		expect(nextGameState.board[0]).toEqual({ type: 'Mercury', index: 0 });
-		expect(nextGameState.board[1]).toEqual({ type: 'Venus', index: 1 });
+		expect(nextGameState.board[0]).toEqual({ type: 'Me', index: 0 });
+		expect(nextGameState.board[1]).toEqual({ type: 'V', index: 1 });
 		expect(nextGameState.remainingCards).toHaveLength(0);
 	});
 });

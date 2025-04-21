@@ -5,7 +5,7 @@ import { NUMBER_OF_CARDS_OF_EACH_TYPE, CARDS_TYPES, BOARD_SIZE } from '$lib/conf
 export function expectValidGameState(gameState: GameState) {
 	// Check basic structure
 	expect(gameState).toBeDefined();
-	expect(gameState).toHaveProperty('currentPlayer');
+	expect(gameState).toHaveProperty('activePlayer');
 	expect(gameState).toHaveProperty('players');
 	expect(gameState).toHaveProperty('board');
 	expect(gameState).toHaveProperty('remainingCards');

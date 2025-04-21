@@ -6,15 +6,15 @@ const getGameState = () => {
 	const gameState = prepare();
 	gameState.pickedCard = gameState.board[0];
 	gameState.board = [
-		{ type: 'Mercury', index: 0 },
-		{ type: 'Mercury', index: 1 },
-		{ type: 'Mercury', index: 2 },
-		{ type: 'Mars', index: 3 },
-		{ type: 'Jupiter', index: 4 },
-		{ type: 'Saturn', index: 5 },
-		{ type: 'Uranus', index: 6 },
-		{ type: 'Neptune', index: 7 },
-		{ type: 'Neptune', index: 8 }
+		{ type: 'Me', index: 0 },
+		{ type: 'Me', index: 1 },
+		{ type: 'Me', index: 2 },
+		{ type: 'Ma', index: 3 },
+		{ type: 'J', index: 4 },
+		{ type: 'Sa', index: 5 },
+		{ type: 'U', index: 6 },
+		{ type: 'Ne', index: 7 },
+		{ type: 'Ne', index: 8 }
 	];
 	return gameState;
 };
@@ -44,12 +44,12 @@ describe('pickAlignment', () => {
 			null,
 			null,
 			null,
-			{ type: 'Mars', index: 3 },
-			{ type: 'Jupiter', index: 4 },
-			{ type: 'Saturn', index: 5 },
-			{ type: 'Uranus', index: 6 },
-			{ type: 'Neptune', index: 7 },
-			{ type: 'Neptune', index: 8 }
+			{ type: 'Ma', index: 3 },
+			{ type: 'J', index: 4 },
+			{ type: 'Sa', index: 5 },
+			{ type: 'U', index: 6 },
+			{ type: 'Ne', index: 7 },
+			{ type: 'Ne', index: 8 }
 		]);
 	});
 
@@ -57,9 +57,9 @@ describe('pickAlignment', () => {
 		const gameState = getGameState();
 		const newGameState = pickAlignment(gameState, [0, 1, 2]);
 		expect(newGameState.players[newGameState.activePlayer].wonCards).toEqual([
-			{ type: 'Mercury', index: 0 },
-			{ type: 'Mercury', index: 1 },
-			{ type: 'Mercury', index: 2 }
+			{ type: 'Me', index: 0 },
+			{ type: 'Me', index: 1 },
+			{ type: 'Me', index: 2 }
 		]);
 	});
 });

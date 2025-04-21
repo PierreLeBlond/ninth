@@ -4,9 +4,9 @@ import { getAlignments } from '$lib/game/getAlignments';
 import type { Card } from '$lib/types/Card';
 
 const horizontalAlignmentBoard = [
-	{ type: 'Mercury', index: 0 },
-	{ type: 'Mercury', index: 1 },
-	{ type: 'Mercury', index: 2 },
+	{ type: 'Me', index: 0 },
+	{ type: 'Me', index: 1 },
+	{ type: 'Me', index: 2 },
 	null,
 	null,
 	null,
@@ -15,36 +15,36 @@ const horizontalAlignmentBoard = [
 ] satisfies (Card | null)[];
 
 const verticalAlignmentBoard = [
-	{ type: 'Mercury', index: 0 },
+	{ type: 'Me', index: 0 },
 	null,
 	null,
-	{ type: 'Mercury', index: 1 },
+	{ type: 'Me', index: 1 },
 	null,
 	null,
-	{ type: 'Mercury', index: 2 },
+	{ type: 'Me', index: 2 },
 	null,
 	null
 ] satisfies (Card | null)[];
 
 const doubleAlignmentBoard = [
-	{ type: 'Mercury', index: 0 },
-	{ type: 'Mercury', index: 1 },
-	{ type: 'Mercury', index: 2 },
-	{ type: 'Venus', index: 3 },
-	{ type: 'Venus', index: 4 },
-	{ type: 'Venus', index: 5 },
+	{ type: 'Me', index: 0 },
+	{ type: 'Me', index: 1 },
+	{ type: 'Me', index: 2 },
+	{ type: 'V', index: 3 },
+	{ type: 'V', index: 4 },
+	{ type: 'V', index: 5 },
 	null,
 	null,
 	null
 ] satisfies (Card | null)[];
 
 const incompleteAlignmentBoard = [
-	{ type: 'Mercury', index: 0 },
-	{ type: 'Mercury', index: 1 },
+	{ type: 'Me', index: 0 },
+	{ type: 'Me', index: 1 },
 	null,
-	{ type: 'Mars', index: 2 },
+	{ type: 'Ma', index: 2 },
 	null,
-	{ type: 'Mars', index: 4 },
+	{ type: 'Ma', index: 4 },
 	null,
 	null,
 	null
