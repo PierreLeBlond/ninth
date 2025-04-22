@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "vite build && vite build -c vite.ws.config.ts",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -35,6 +35,7 @@
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
+		"rollup-plugin-node-externals": "^8.0.0",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",
@@ -49,7 +50,6 @@
 		]
 	},
 	"dependencies": {
-		"@tailwindcss/cli": "^4.0.15",
 		"clsx": "^2.1.1",
 		"socket.io": "^4.8.1",
 		"socket.io-client": "^4.8.1",

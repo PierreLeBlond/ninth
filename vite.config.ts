@@ -2,10 +2,17 @@ import tailwindcss from '@tailwindcss/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import { createWebSocketServer } from './src/ws/createWebSocketServer';
+
+const webSocketServer = {
+	name: 'webSocketServer',
+	configureServer(server: any) {
+		createWebSocketServer(server.httpServer);
+	}
+};
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
-
+	plugins: [tailwindcss(), sveltekit(), webSocketServer],
 	test: {
 		workspace: [
 			{

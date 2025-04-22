@@ -1,15 +1,15 @@
-import { PUBLIC_WS_DOMAIN } from '$env/static/public';
 import type { GameState } from '$lib/types/GameState';
 import { io } from 'socket.io-client';
 
 export const useGameSocket = (params: {
+	wsDomain: string;
 	roomId: string;
 	gameState: GameState;
 	onGameState: (updatedGameState: GameState) => void;
 }) => {
 	let connected = $state(false);
 
-	const socket = io(`${PUBLIC_WS_DOMAIN}/room`);
+	const socket = io(`${params.wsDomain}/room`);
 	socket.on('connect', () => {
 		connected = true;
 		socket.emit('joinRoom', params.roomId);
